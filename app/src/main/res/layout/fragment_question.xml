@@ -15,16 +15,18 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="What is this person's job?" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/personImageView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginTop="16dp"
+        android:background="@color/cardview_dark_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,43 +36,47 @@
 
     <Button
         android:id="@+id/answerButton1"
-        android:layout_width="174dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/answerButton3"
+        app:layout_constraintEnd_toStartOf="@+id/answerButton2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/personImageView"
         app:layout_constraintVertical_bias="0.0"
         tools:text="Chef" />
 
     <Button
         android:id="@+id/answerButton2"
-        android:layout_width="175dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/answerButton4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/personImageView"
         app:layout_constraintVertical_bias="0.0"
         tools:text="Physicist" />
 
     <Button
         android:id="@+id/answerButton3"
-        android:layout_width="175dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/answerButton4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/answerButton1"
         tools:text="Programmer" />
 
     <Button
         android:id="@+id/answerButton4"
-        android:layout_width="175dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -82,14 +88,12 @@
         android:id="@+id/hintButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_green_light"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@android:color/holo_blue_light"
         android:text="Hint"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/SkipButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/answerButton3"
         app:layout_constraintVertical_bias="1.0" />
@@ -98,15 +102,24 @@
         android:id="@+id/SkipButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_orange_dark"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:backgroundTint="@android:color/holo_orange_dark"
         android:text="Skip"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/hintButton"
         app:layout_constraintStart_toEndOf="@+id/hintButton"
-        app:layout_constraintTop_toBottomOf="@+id/answerButton4"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/hintButton" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/holo_green_light"
+        android:text="Submit Answer"
+        app:layout_constraintBottom_toBottomOf="@+id/hintButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/SkipButton"
+        app:layout_constraintTop_toTopOf="@+id/SkipButton" />
 
 </android.support.constraint.ConstraintLayout>
