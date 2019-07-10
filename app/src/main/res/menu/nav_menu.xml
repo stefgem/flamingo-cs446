@@ -10,6 +10,10 @@
         android:icon="@drawable/ic_play_24px"
         android:title="Play" />
     <item
+        android:id="@+id/StudyAddFragment"
+        android:icon="@drawable/ic_settings_24px"
+        android:title="Review" />
+    <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings_24px"
         android:title="Settings" />

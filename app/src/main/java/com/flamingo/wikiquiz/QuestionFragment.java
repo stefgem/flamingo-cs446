@@ -3,7 +3,6 @@ package com.flamingo.wikiquiz;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.squareup.picasso.Picasso;
 
@@ -128,7 +129,7 @@ public class QuestionFragment extends Fragment {
         if (questionCount == 1) {
             Picasso.get()
                     .load("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG")
-                    .resize(200,200)
+                    .resize(200, 200)
                     .centerCrop()
                     .into(personImageView);
 
@@ -155,8 +156,7 @@ public class QuestionFragment extends Fragment {
                         if (selectedAnswer == 4) {
                             toastString = "Correct!";
 
-                        }
-                        else {
+                        } else {
                             toastString = "Incorrect.";
                         }
 
@@ -166,9 +166,7 @@ public class QuestionFragment extends Fragment {
                         selectedAnswer = -1;
                         submitButton.setText("Next Question");
 
-                    }
-
-                    else if (selectedAnswer == -1) {
+                    } else if (selectedAnswer == -1) {
 
                         toast.cancel();
                         answerButton1.getBackground().clearColorFilter();
@@ -182,13 +180,11 @@ public class QuestionFragment extends Fragment {
                     }
                 }
             });
-        }
-
-        else if (questionCount == 2) {
+        } else if (questionCount == 2) {
 
             Picasso.get()
                     .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
-                    .resize(200,200)
+                    .resize(200, 200)
                     .centerCrop()
                     .into(personImageView);
 
@@ -226,8 +222,7 @@ public class QuestionFragment extends Fragment {
                         if (selectedAnswer == 2) {
                             toastString = "Correct!";
 
-                        }
-                        else {
+                        } else {
                             toastString = "Incorrect.";
                         }
 
@@ -237,9 +232,7 @@ public class QuestionFragment extends Fragment {
                         selectedAnswer = -1;
                         submitButton.setText("Next Question");
 
-                    }
-
-                    else if (selectedAnswer == -1) {
+                    } else if (selectedAnswer == -1) {
 
                         toast.cancel();
                         answerButton1.getBackground().clearColorFilter();
@@ -253,13 +246,11 @@ public class QuestionFragment extends Fragment {
                     }
                 }
             });
-        }
-
-        else {
+        } else {
 
             Picasso.get()
                     .load("https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Robert_Downey_Jr_2014_Comic_Con_%28cropped%29.jpg/800px-Robert_Downey_Jr_2014_Comic_Con_%28cropped%29.jpg")
-                    .resize(200,200)
+                    .resize(200, 200)
                     .centerCrop()
                     .into(personImageView);
 
@@ -286,8 +277,7 @@ public class QuestionFragment extends Fragment {
                         if (selectedAnswer == 1) {
                             toastString = "Correct!";
 
-                        }
-                        else {
+                        } else {
                             toastString = "Incorrect.";
                         }
 
@@ -297,9 +287,7 @@ public class QuestionFragment extends Fragment {
                         selectedAnswer = -1;
                         submitButton.setText("Next Question");
 
-                    }
-
-                    else if (selectedAnswer == -1) {
+                    } else if (selectedAnswer == -1) {
 
                         toast.cancel();
                         answerButton1.getBackground().clearColorFilter();

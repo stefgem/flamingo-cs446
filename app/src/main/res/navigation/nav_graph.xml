@@ -10,6 +10,11 @@
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
+        android:id="@+id/StudyAddFragment"
+        android:name="com.flamingo.wikiquiz.StudyAddFragment"
+        android:label="fragment_study_add"
+        tools:layout="@layout/fragment_study_add" />
+    <fragment
         android:id="@+id/questionFragment"
         android:name="com.flamingo.wikiquiz.QuestionFragment"
         android:label="fragment_question"

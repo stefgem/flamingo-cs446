@@ -2,14 +2,14 @@ package com.flamingo.wikiquiz;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -21,9 +21,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class StatsFragment extends Fragment {
 
 
@@ -54,7 +51,7 @@ public class StatsFragment extends Fragment {
         getBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Button Click","Entering button click event");
+                Log.d("Button Click", "Entering button click event");
                 System.out.println("Entering button click event");
                 getWebsite();
             }
@@ -70,7 +67,9 @@ public class StatsFragment extends Fragment {
                 Element desiredTbl = new Element(Tag.valueOf("table"), "");
 
                 try {
-                    Connection.Response res = Jsoup.connect("http://en.wikipedia.org/wiki/Linus_Torvalds").execute();
+                    Connection.Response res
+                            = Jsoup.connect("https://en.wikipedia.org/wiki/Linus_Torvalds")
+                            .execute();
                     String html = res.body();
                     Document doc2 = Jsoup.parseBodyFragment(html);
                     Element body = doc2.body();
@@ -90,7 +89,8 @@ public class StatsFragment extends Fragment {
                 getParentFragment().getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        result.loadDataWithBaseURL(null, builder.toString(), "text/html", "utf-8", null);
+                        result.loadDataWithBaseURL(null, builder.toString(),
+                                "text/html", "utf-8", null);
                         //result.setText(builder.toString());
                     }
                 });
