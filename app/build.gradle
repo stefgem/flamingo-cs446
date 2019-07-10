@@ -33,4 +33,6 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828' // Picasso Image Loading/Caching
 
+    implementation 'org.jsoup:jsoup:1.11.1'
+
 }
