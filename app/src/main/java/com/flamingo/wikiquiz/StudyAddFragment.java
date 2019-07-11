@@ -36,9 +36,9 @@ public class StudyAddFragment extends Fragment {
                 // Update the cached copy of the words in the adapter.
 
                 if (textView != null) {
-                    textView.setText("");
+                    textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
                     for (Infobox infobox : infoboxes) {
-                        String line = infobox.get_id() + " , " + infobox.get_name() + " , "
+                        String line = infobox.getRowId() + " , " + infobox.get_name() + " , "
                                 + infobox.getCategory() + " , " + infobox.getBirthYear();
                         textView.append(line + "\n");
 

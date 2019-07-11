@@ -3,6 +3,7 @@ package com.flamingo.wikiquiz;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -12,7 +13,8 @@ import androidx.room.PrimaryKey;
 public class Infobox {
 
     @PrimaryKey(autoGenerate = true)
-    private long _id;
+    @ColumnInfo(name="rowid")
+    private int rowId;
 
     @NonNull
     private String _name;
@@ -30,7 +32,7 @@ public class Infobox {
     public Infobox(@NonNull String name,
                    @NonNull String category, int birthYear,
                    @NonNull byte[] imageBlob) {
-        _id = 0; // setting to 0 will make the ID autoGenerate annotation work
+        rowId = 0; // setting to 0 will make the ID autoGenerate annotation work
         set_name(name);
         setCategory(category);
         setBirthYear(birthYear);
@@ -41,12 +43,12 @@ public class Infobox {
         return this;
     }
 
-    public long get_id() {
-        return _id;
+    public int getRowId() {
+        return rowId;
     }
 
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setRowId(int row_id) {
+        this.rowId = row_id;
     }
 
     @NonNull

@@ -11,7 +11,7 @@
         android:title="Play" />
     <item
         android:id="@+id/StudyAddFragment"
-        android:icon="@drawable/ic_settings_24px"
+        android:icon="@drawable/ic_notebook_24px"
         android:title="Review" />
     <item
         android:id="@+id/settingsFragment"

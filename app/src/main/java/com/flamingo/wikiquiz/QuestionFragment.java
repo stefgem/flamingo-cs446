@@ -1,5 +1,6 @@
 package com.flamingo.wikiquiz;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -19,13 +20,13 @@ import com.squareup.picasso.Picasso;
 public class QuestionFragment extends Fragment {
 
 
-    int questionCount = 0;
-    int selectedAnswer = 0;
+    private int questionCount = 0;
+    private int selectedAnswer = 0;
 
-    ImageView personImageView;
-    Button answerButton1, answerButton2, answerButton3, answerButton4, submitButton, hintButton;
-    TextView questionTextView;
-    Toast toast;
+    private ImageView personImageView;
+    private Button answerButton1, answerButton2, answerButton3, answerButton4, submitButton, hintButton;
+    private TextView questionTextView;
+    private Toast toast;
 
 
     public QuestionFragment() {
@@ -44,6 +45,7 @@ public class QuestionFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -116,9 +118,7 @@ public class QuestionFragment extends Fragment {
             }
         });
 
-
         nextQuestion();
-
         return view;
     }
 
@@ -127,6 +127,7 @@ public class QuestionFragment extends Fragment {
         questionCount++;
 
         if (questionCount == 1) {
+
             Picasso.get()
                     .load("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG")
                     .resize(200, 200)

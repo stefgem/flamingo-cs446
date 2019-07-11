@@ -26,6 +26,8 @@ public class InfoboxRepository {
         new insertAsyncTask(_infoboxDao).execute(infobox);
     }
 
+    public void deleteAll() {_infoboxDao.deleteAll(); }
+
     private static class insertAsyncTask extends AsyncTask<Infobox, Void, Void> {
 
         private InfoboxDao _AsyncTaskDao;

@@ -26,4 +26,8 @@ public class QuestionViewModel extends AndroidViewModel {
     public void insert(Infobox infobox) {
         _repository.insert(infobox);
     }
+
+    public void deleteAllDatabaseRows(){
+        _repository.deleteAll();
+    }
 }

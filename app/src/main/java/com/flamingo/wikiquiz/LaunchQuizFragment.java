@@ -13,11 +13,9 @@ import androidx.navigation.Navigation;
 
 public class LaunchQuizFragment extends Fragment {
 
-
     public LaunchQuizFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

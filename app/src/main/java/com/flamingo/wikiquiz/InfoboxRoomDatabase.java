@@ -25,6 +25,8 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             InfoboxRoomDatabase.class, "infobox_database")
                             .addCallback(sRoomDatabaseCallback)
+                            .fallbackToDestructiveMigration() //destroy db when version# increased
+                            .fallbackToDestructiveMigrationOnDowngrade()
                             .build();
                 }
             }
@@ -35,6 +37,17 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
     private static RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback() {
 
+                // this gets called the first time the DB is created
+                @Override
+                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                    super.onCreate(db);
+
+                    // decided put Populate call in onOpen instead for now
+                    // ideally would be here, we would do initial populating of the DB only once
+                    // new PopulateDbAsync(INSTANCE).execute();
+                }
+
+                // this gets called every time the DB is opened
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     super.onOpen(db);
@@ -52,10 +65,26 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            _dao.deleteAll();
-            Infobox infobox = new Infobox("Nikola Tesla", "Science & Math", 1856,  "no".getBytes());
+            _dao.deleteAll();  // this is only useful if calling Populate from an onOpen call
+
+            Infobox infobox;
+
+            // TODO hardcoded infoboxes go here
+            // example insertion of 1 row - image blob is just a random byteArray for now
+            // TODO make imageBlob actually be real
+            infobox = new Infobox("Nikola Tesla", "Science & Math",
+                    1856, "no".getBytes());
             _dao.insert(infobox);
-            //infobox = new Infobox(); //TODO
+
+            infobox = new Infobox("Elizabeth II", "Politics",
+                    1926, "no".getBytes());
+            _dao.insert(infobox);
+
+            infobox = new Infobox("Robert Downey Jr.", "TV & Film",
+                    1965, "no".getBytes());
+            _dao.insert(infobox);
+
+            //infobox = new Infobox(...);
             //_dao.insert(infobox);
             return null;
         }
