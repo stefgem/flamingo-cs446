@@ -37,7 +37,7 @@ public class QuestionFragment extends Fragment {
     private String NEXT_STRING = "Next Question";
 
     private ImageView personImageView;
-    private Button submitButton, hintButton;
+    private Button submitButton, hintButton, skipButton;
     private HashMap<Integer, Button> answerButtons;
     private TextView questionTextView;
     private Toast toast;
@@ -76,6 +76,14 @@ public class QuestionFragment extends Fragment {
         answerButtons.put(2, (Button)view.findViewById(R.id.answerButton3));
         answerButtons.put(3, (Button)view.findViewById(R.id.answerButton4));
 
+        skipButton = view.findViewById(R.id.skipButton);
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoNextQuestion();
+            }
+        });
+
         hintButton = view.findViewById(R.id.hintButton);
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,12 +111,9 @@ public class QuestionFragment extends Fragment {
             public void onClick(View v) {
                 if (((Button)v).getText().equals(SUBMIT_STRING)) {
                     submitAnswer();
-                    disableAnswerButtons();
                     submitButton.setText(NEXT_STRING);
                 } else {
                     gotoNextQuestion();
-                    enableAnswerButtons();
-                    hintButton.setEnabled(true);
                     submitButton.setText(SUBMIT_STRING);
                 }
             }
@@ -143,7 +148,9 @@ public class QuestionFragment extends Fragment {
 
         toast.setText(toastString);
         toast.show();
-
+        disableAnswerButtons();
+        hintButton.setEnabled(false);
+        skipButton.setEnabled(false);
         for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
             if (button.getKey() == correctAnswer) {
                 button.getValue().getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
@@ -154,6 +161,9 @@ public class QuestionFragment extends Fragment {
     }
 
     public void gotoNextQuestion() {
+        enableAnswerButtons();
+        hintButton.setEnabled(true);
+        skipButton.setEnabled(true);
         if (questionCount < maxQuestions) {
             for (int i = 0; i < answerButtons.size(); i++) {
                 answerButtons.get(i).getBackground().clearColorFilter();
