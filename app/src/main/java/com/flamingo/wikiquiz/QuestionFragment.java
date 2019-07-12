@@ -2,8 +2,10 @@ package com.flamingo.wikiquiz;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 
 public class QuestionFragment extends Fragment {
@@ -22,9 +31,14 @@ public class QuestionFragment extends Fragment {
 
     private int questionCount = 0;
     private int selectedAnswer = 0;
+    private int correctAnswer = 0;
+    private int maxQuestions = 3;
+    private String SUBMIT_STRING = "Submit Answer";
+    private String NEXT_STRING = "Next Question";
 
     private ImageView personImageView;
-    private Button answerButton1, answerButton2, answerButton3, answerButton4, submitButton, hintButton;
+    private Button submitButton, hintButton;
+    private HashMap<Integer, Button> answerButtons;
     private TextView questionTextView;
     private Toast toast;
 
@@ -56,254 +70,159 @@ public class QuestionFragment extends Fragment {
 
         personImageView = view.findViewById(R.id.personImageView);
 
-        answerButton1 = view.findViewById(R.id.answerButton1);
-        answerButton2 = view.findViewById(R.id.answerButton2);
-        answerButton3 = view.findViewById(R.id.answerButton3);
-        answerButton4 = view.findViewById(R.id.answerButton4);
+        answerButtons = new HashMap<Integer, Button>();
+        answerButtons.put(0, (Button)view.findViewById(R.id.answerButton1));
+        answerButtons.put(1, (Button)view.findViewById(R.id.answerButton2));
+        answerButtons.put(2, (Button)view.findViewById(R.id.answerButton3));
+        answerButtons.put(3, (Button)view.findViewById(R.id.answerButton4));
 
         hintButton = view.findViewById(R.id.hintButton);
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int total = 0;
+                int firstRandom = -1;
+                while (total != 2) {
+                    int random = new Random().nextInt(4);
+                    if (random == correctAnswer || random == firstRandom) {
+                        continue;
+                    }
+                    firstRandom = random;
+                    answerButtons.get(random).setEnabled(false);
+                    total++;
+                }
+                hintButton.setEnabled(false);
+            }
+        });
 
         submitButton = view.findViewById(R.id.submitButton);
+        setupAnswerButtons();
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((Button)v).getText().equals(SUBMIT_STRING)) {
+                    submitAnswer();
+                    disableAnswerButtons();
+                    submitButton.setText(NEXT_STRING);
+                } else {
+                    gotoNextQuestion();
+                    enableAnswerButtons();
+                    hintButton.setEnabled(true);
+                    submitButton.setText(SUBMIT_STRING);
+                }
+            }
+        });
         questionTextView = view.findViewById(R.id.QuizQuestionTextView);
+        gotoNextQuestion();
 
-        answerButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                answerButton2.getBackground().clearColorFilter();
-                answerButton3.getBackground().clearColorFilter();
-                answerButton4.getBackground().clearColorFilter();
-
-                answerButton1.getBackground().setColorFilter(Color.MAGENTA, PorterDuff.Mode.MULTIPLY);
-                selectedAnswer = 1;
-            }
-        });
-
-        answerButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                answerButton1.getBackground().clearColorFilter();
-                answerButton3.getBackground().clearColorFilter();
-                answerButton4.getBackground().clearColorFilter();
-
-                answerButton2.getBackground().setColorFilter(Color.MAGENTA, PorterDuff.Mode.MULTIPLY);
-                selectedAnswer = 2;
-            }
-        });
-
-        answerButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                answerButton1.getBackground().clearColorFilter();
-                answerButton2.getBackground().clearColorFilter();
-                answerButton4.getBackground().clearColorFilter();
-
-                answerButton3.getBackground().setColorFilter(Color.MAGENTA, PorterDuff.Mode.MULTIPLY);
-                selectedAnswer = 3;
-            }
-        });
-
-        answerButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                answerButton1.getBackground().clearColorFilter();
-                answerButton2.getBackground().clearColorFilter();
-                answerButton3.getBackground().clearColorFilter();
-
-                answerButton4.getBackground().setColorFilter(Color.MAGENTA, PorterDuff.Mode.MULTIPLY);
-                selectedAnswer = 4;
-            }
-        });
-
-        nextQuestion();
         return view;
     }
 
-    public void nextQuestion() {
+    public void enableAnswerButtons() {
+        for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
+            button.getValue().setEnabled(true);
+        }
+    }
 
-        questionCount++;
+    public void disableAnswerButtons() {
+        for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
+            button.getValue().setEnabled(false);
+        }
+    }
 
-        if (questionCount == 1) {
+    public void submitAnswer() {
+        String toastString;
 
-            Picasso.get()
-                    .load("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG")
-                    .resize(200, 200)
-                    .centerCrop()
-                    .into(personImageView);
+        if (selectedAnswer == correctAnswer) {
+            toastString = "Correct!";
 
-            questionTextView.setText("What is this person's name?");
-
-            answerButton1.setText("Harry Houdini");
-            answerButton2.setText("Salvador Dali");
-            answerButton3.setText("Charlie Chaplin");
-            answerButton4.setText("Nikola Tesla");
-
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (selectedAnswer > 0) {
-
-                        answerButton1.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton2.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton3.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton4.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
-
-                        String toastString;
-
-                        if (selectedAnswer == 4) {
-                            toastString = "Correct!";
-
-                        } else {
-                            toastString = "Incorrect.";
-                        }
-
-                        toast.setText(toastString);
-                        toast.show();
-
-                        selectedAnswer = -1;
-                        submitButton.setText("Next Question");
-
-                    } else if (selectedAnswer == -1) {
-
-                        toast.cancel();
-                        answerButton1.getBackground().clearColorFilter();
-                        answerButton2.getBackground().clearColorFilter();
-                        answerButton3.getBackground().clearColorFilter();
-                        answerButton4.getBackground().clearColorFilter();
-
-                        selectedAnswer = 0;
-                        submitButton.setText("Submit Answer");
-                        nextQuestion();
-                    }
-                }
-            });
-        } else if (questionCount == 2) {
-
-            Picasso.get()
-                    .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
-                    .resize(200, 200)
-                    .centerCrop()
-                    .into(personImageView);
-
-            questionTextView.setText("In what year was this person born?");
-
-            answerButton1.setText("1933");
-            answerButton2.setText("1926");
-            answerButton3.setText("1921");
-            answerButton4.setText("1918");
-
-            hintButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    answerButton1.getBackground().setColorFilter(Color.DKGRAY, PorterDuff.Mode.MULTIPLY);
-                    answerButton3.getBackground().setColorFilter(Color.DKGRAY, PorterDuff.Mode.MULTIPLY);
-
-                }
-            });
-
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (selectedAnswer > 0) {
-
-                        answerButton1.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton2.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
-                        answerButton3.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton4.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-
-                        String toastString;
-
-                        if (selectedAnswer == 2) {
-                            toastString = "Correct!";
-
-                        } else {
-                            toastString = "Incorrect.";
-                        }
-
-                        toast.setText(toastString);
-                        toast.show();
-
-                        selectedAnswer = -1;
-                        submitButton.setText("Next Question");
-
-                    } else if (selectedAnswer == -1) {
-
-                        toast.cancel();
-                        answerButton1.getBackground().clearColorFilter();
-                        answerButton2.getBackground().clearColorFilter();
-                        answerButton3.getBackground().clearColorFilter();
-                        answerButton4.getBackground().clearColorFilter();
-
-                        selectedAnswer = 0;
-                        submitButton.setText("Submit Answer");
-                        nextQuestion();
-                    }
-                }
-            });
         } else {
+            toastString = "Incorrect.";
+        }
 
-            Picasso.get()
-                    .load("https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Robert_Downey_Jr_2014_Comic_Con_%28cropped%29.jpg/800px-Robert_Downey_Jr_2014_Comic_Con_%28cropped%29.jpg")
-                    .resize(200, 200)
-                    .centerCrop()
-                    .into(personImageView);
+        toast.setText(toastString);
+        toast.show();
 
-            questionTextView.setText("In what city was this person born?");
+        for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
+            if (button.getKey() == correctAnswer) {
+                button.getValue().getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+            } else {
+                button.getValue().getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            }
+        }
+    }
 
-            answerButton1.setText("New York City");
-            answerButton2.setText("Seattle");
-            answerButton3.setText("Montreal");
-            answerButton4.setText("Boston");
+    public void gotoNextQuestion() {
+        if (questionCount < maxQuestions) {
+            for (int i = 0; i < answerButtons.size(); i++) {
+                answerButtons.get(i).getBackground().clearColorFilter();
+            }
+            QuestionContent questionContent = getQuestionContent();
+            populateQuestion(questionContent);
+            questionCount++;
+        } else {
+            NavHostFragment.findNavController(this).navigate(R.id.action_questionFragment_to_endQuizFragment);
+        }
 
-            submitButton.setOnClickListener(new View.OnClickListener() {
+    }
+
+    public void setupAnswerButtons() {
+        for (final Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
+            button.getValue().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    if (selectedAnswer > 0) {
-
-                        answerButton1.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
-                        answerButton2.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton3.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-                        answerButton4.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
-
-                        String toastString;
-
-                        if (selectedAnswer == 1) {
-                            toastString = "Correct!";
-
-                        } else {
-                            toastString = "Incorrect.";
-                        }
-
-                        toast.setText(toastString);
-                        toast.show();
-
-                        selectedAnswer = -1;
-                        submitButton.setText("Next Question");
-
-                    } else if (selectedAnswer == -1) {
-
-                        toast.cancel();
-                        answerButton1.getBackground().clearColorFilter();
-                        answerButton2.getBackground().clearColorFilter();
-                        answerButton3.getBackground().clearColorFilter();
-                        answerButton4.getBackground().clearColorFilter();
-
-                        selectedAnswer = 0;
-                        submitButton.setText("Submit Answer");
-                        nextQuestion();
+                    for (final Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
+                        button.getValue().getBackground().clearColorFilter();
                     }
+
+                    v.getBackground().setColorFilter(Color.MAGENTA, PorterDuff.Mode.MULTIPLY);
+                    selectedAnswer = button.getKey();
                 }
             });
+        }
+    }
 
+    public QuestionContent getQuestionContent() {
+        QuestionContent qc = new QuestionContent();
+        if (questionCount%2 == 0) {
+            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
+            qc.questionString = "What is this person's name?";
+            qc.answers = new ArrayList<>();
+            qc.answers.add("Harry Houdini");
+            qc.answers.add("Salvador Dali");
+            qc.answers.add("Charlie Chaplin");
+            qc.answers.add("Nikola Tesla");
+            qc.correctAnswer = 3;
+        }
+        else {
+            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg";
+            qc.questionString = "What is this person's Date?";
+            qc.answers = new ArrayList<>();
+            qc.answers.add("Alice");
+            qc.answers.add("Bob");
+            qc.answers.add("Eve");
+            qc.answers.add("Mellisa");
+            qc.correctAnswer = 2;
+        }
+        return qc;
+    }
 
+    public void populateQuestion(QuestionContent questionContent) {
+        Log.e("Question: ", "" + questionCount);
+
+        Picasso.get()
+                .load(questionContent.imagePath)
+                .resize(200, 200)
+                .centerCrop()
+                .into(personImageView);
+
+        questionTextView.setText(questionContent.questionString);
+        correctAnswer = questionContent.correctAnswer;
+
+        ArrayList<String> answers = questionContent.answers;
+        for (int i = 0; i < answers.size(); i++) {
+            answerButtons.get(i).setText(answers.get(i));
         }
     }
 
