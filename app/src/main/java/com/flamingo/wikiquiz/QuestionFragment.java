@@ -33,6 +33,8 @@ public class QuestionFragment extends Fragment {
     private int selectedAnswer = 0;
     private int correctAnswer = 0;
     private int maxQuestions = 3;
+    private int currentScore = 0;
+    private boolean usedHint = false;
     private String SUBMIT_STRING = "Submit Answer";
     private String NEXT_STRING = "Next Question";
 
@@ -100,6 +102,7 @@ public class QuestionFragment extends Fragment {
                     total++;
                 }
                 hintButton.setEnabled(false);
+                usedHint = true;
             }
         });
 
@@ -140,6 +143,11 @@ public class QuestionFragment extends Fragment {
         String toastString;
 
         if (selectedAnswer == correctAnswer) {
+            if (usedHint) {
+                currentScore += 1;
+            } else {
+                currentScore += 2;
+            }
             toastString = "Correct!";
 
         } else {
@@ -148,6 +156,7 @@ public class QuestionFragment extends Fragment {
 
         toast.setText(toastString);
         toast.show();
+        
         disableAnswerButtons();
         hintButton.setEnabled(false);
         skipButton.setEnabled(false);
@@ -162,6 +171,7 @@ public class QuestionFragment extends Fragment {
 
     public void gotoNextQuestion() {
         enableAnswerButtons();
+        usedHint = false;
         hintButton.setEnabled(true);
         skipButton.setEnabled(true);
         if (questionCount < maxQuestions) {
@@ -172,7 +182,9 @@ public class QuestionFragment extends Fragment {
             populateQuestion(questionContent);
             questionCount++;
         } else {
-            NavHostFragment.findNavController(this).navigate(R.id.action_questionFragment_to_endQuizFragment);
+            Bundle bundle = new Bundle();
+            bundle.putInt("score", currentScore);
+            NavHostFragment.findNavController(this).navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
         }
 
     }
