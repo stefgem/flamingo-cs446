@@ -42,6 +42,9 @@
         android:name="com.flamingo.wikiquiz.EndQuizFragment"
         android:label="fragment_end_quiz"
         tools:layout="@layout/fragment_end_quiz">
+        <action
+            android:id="@+id/action_endQuizFragment_to_launchQuizFragment"
+            app:destination="@+id/launchQuizFragment" />
         <argument
             android:name="score"
             app:argType="integer"

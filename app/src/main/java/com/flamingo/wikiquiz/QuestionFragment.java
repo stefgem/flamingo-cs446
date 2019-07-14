@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -43,6 +44,7 @@ public class QuestionFragment extends Fragment {
     private HashMap<Integer, Button> answerButtons;
     private TextView questionTextView;
     private Toast toast;
+    private View progressBar;
 
 
     public QuestionFragment() {
@@ -71,6 +73,8 @@ public class QuestionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_question, container, false);
 
         personImageView = view.findViewById(R.id.personImageView);
+
+        progressBar = view.findViewById(R.id.quizProgressBar);
 
         answerButtons = new HashMap<Integer, Button>();
         answerButtons.put(0, (Button)view.findViewById(R.id.answerButton1));
@@ -175,12 +179,16 @@ public class QuestionFragment extends Fragment {
         hintButton.setEnabled(true);
         skipButton.setEnabled(true);
         if (questionCount < maxQuestions) {
+            float percent = (float) questionCount / (float) maxQuestions;
+            ((ConstraintLayout.LayoutParams)progressBar.getLayoutParams()).matchConstraintPercentWidth = percent;
+            progressBar.requestLayout();
             for (int i = 0; i < answerButtons.size(); i++) {
                 answerButtons.get(i).getBackground().clearColorFilter();
             }
             QuestionContent questionContent = getQuestionContent();
             populateQuestion(questionContent);
             questionCount++;
+
         } else {
             Bundle bundle = new Bundle();
             bundle.putInt("score", currentScore);
