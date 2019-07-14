@@ -6,6 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".QuestionFragment">
 
+    <View
+        android:id="@+id/quizProgressBarBackground"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/black_rectangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <View
+        android:id="@+id/quizProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/blue_rectangle"
+        app:layout_constraintWidth_percent="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/quizProgressBarBackground"
+        app:layout_constraintBottom_toBottomOf="@+id/quizProgressBarBackground"/>
+
     <TextView
         android:id="@+id/QuizQuestionTextView"
         android:layout_width="match_parent"
@@ -16,7 +35,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quizProgressBar"
         tools:text="What is this person's job?" />
 
     <ImageView
@@ -117,7 +136,7 @@
         android:text="Submit Answer"
         app:layout_constraintBottom_toBottomOf="@+id/hintButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/SkipButton"
-        app:layout_constraintTop_toTopOf="@+id/SkipButton" />
+        app:layout_constraintStart_toEndOf="@+id/skipButton"
+        app:layout_constraintTop_toTopOf="@+id/skipButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
