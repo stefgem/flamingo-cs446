@@ -15,7 +15,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -64,7 +63,6 @@ public class StatsFragment extends Fragment {
             @Override
             public void run() {
                 final StringBuilder builder = new StringBuilder();
-                Element desiredTbl = new Element(Tag.valueOf("table"), "");
 
                 try {
                     Connection.Response res
@@ -81,7 +79,6 @@ public class StatsFragment extends Fragment {
                             break;
                         }
                     }
-                    final Element infobox = desiredTbl;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -91,7 +88,6 @@ public class StatsFragment extends Fragment {
                     public void run() {
                         result.loadDataWithBaseURL(null, builder.toString(),
                                 "text/html", "utf-8", null);
-                        //result.setText(builder.toString());
                     }
                 });
             }
