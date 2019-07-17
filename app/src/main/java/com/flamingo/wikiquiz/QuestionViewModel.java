@@ -12,6 +12,7 @@ public class QuestionViewModel extends AndroidViewModel {
 
     private InfoboxRepository _repository;
     private LiveData<List<Infobox>> _allInfoBoxes;
+    private Infobox[] _infoboxesInCategory;
 
     public QuestionViewModel(@NonNull Application application) {
         super(application);
@@ -21,6 +22,10 @@ public class QuestionViewModel extends AndroidViewModel {
 
     LiveData<List<Infobox>> getAllInfoBoxes() {
         return _allInfoBoxes;
+    }
+
+    public LiveData<List<Infobox>> getInfoboxesInCategory(String category) {
+        return _repository.getInfoboxesInCategory(category);
     }
 
     public void insert(Infobox infobox) {

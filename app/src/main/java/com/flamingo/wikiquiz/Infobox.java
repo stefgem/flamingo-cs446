@@ -33,7 +33,7 @@ public class Infobox {
                    @NonNull String category, int birthYear,
                    @NonNull byte[] imageBlob) {
         rowId = 0; // setting to 0 will make the ID autoGenerate annotation work
-        set_name(name);
+        setName(name);
         setCategory(category);
         setBirthYear(birthYear);
         setImageBlob(imageBlob);
@@ -52,11 +52,11 @@ public class Infobox {
     }
 
     @NonNull
-    public String get_name() {
+    public String getName() {
         return _name;
     }
 
-    public void set_name(@NonNull String name) {
+    public void setName(@NonNull String name) {
         this._name = name;
     }
 

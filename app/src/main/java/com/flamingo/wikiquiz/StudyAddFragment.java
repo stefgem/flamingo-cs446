@@ -29,23 +29,43 @@ public class StudyAddFragment extends Fragment {
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
         questionViewModel
-                .getAllInfoBoxes()
+                .getInfoboxesInCategory("Science & Math")
                 .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
-            @Override
-            public void onChanged(@Nullable final List<Infobox> infoboxes) {
-                // Update the cached copy of the words in the adapter.
+                    @Override
+                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
+                        // Update the cached copy of the words in the adapter.
 
-                if (textView != null) {
-                    textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
-                    for (Infobox infobox : infoboxes) {
-                        String line = infobox.getRowId() + " , " + infobox.get_name() + " , "
-                                + infobox.getCategory() + " , " + infobox.getBirthYear();
-                        textView.append(line + "\n");
+                        if (textView != null) {
+                            textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
+                            for (Infobox infobox : infoboxes) {
+                                String line = infobox.getRowId() + " , " + infobox.getName() + " , "
+                                        + infobox.getCategory() + " , " + infobox.getBirthYear();
+                                textView.append(line + "\n");
 
+                            }
+
+                        }
                     }
-                }
-            }
-        });
+                });
+//        questionViewModel
+//                .getAllInfoBoxes()
+//                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
+//            @Override
+//            public void onChanged(@Nullable final List<Infobox> infoboxes) {
+//                // Update the cached copy of the words in the adapter.
+//
+//                if (textView != null) {
+//                    textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
+//                    for (Infobox infobox : infoboxes) {
+//                        String line = infobox.getRowId() + " , " + infobox.get_name() + " , "
+//                                + infobox.getCategory() + " , " + infobox.getBirthYear();
+//                        textView.append(line + "\n");
+//
+//                    }
+//
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -55,11 +75,7 @@ public class StudyAddFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_study_add, container, false);
         textView = view.findViewById(R.id.database_textview);
 
-
-        //Button button = view.findViewById(R.id.launchQuizButton);
-
-        //button.setOnClickListener(Navigation.createNavigateOnClickListener(
-        //      R.id.action_launchQuizFragment_to_questionFragment, null));
+        questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
 
         return view;
     }
