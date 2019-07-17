@@ -14,15 +14,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -45,6 +50,9 @@ public class QuestionFragment extends Fragment {
     private TextView questionTextView;
     private Toast toast;
     private View progressBar;
+
+    private QuestionViewModel questionViewModel;
+    private List<Infobox> infoboxesList;
 
 
     public QuestionFragment() {
@@ -75,6 +83,7 @@ public class QuestionFragment extends Fragment {
         personImageView = view.findViewById(R.id.personImageView);
 
         progressBar = view.findViewById(R.id.quizProgressBar);
+        infoboxesList = new ArrayList<>();
 
         answerButtons = new HashMap<Integer, Button>();
         answerButtons.put(0, (Button)view.findViewById(R.id.answerButton1));
@@ -131,6 +140,24 @@ public class QuestionFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+//        TODO: This part isn't working to fetch the database
+        questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
+        questionViewModel
+                .getInfoboxesInCategory("Science & Math")
+                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
+                    @Override
+                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
+                        Log.e("This part with database", "error");
+                        infoboxesList.addAll(infoboxes);
+                    }
+                });
+//        gotoNextQuestion();
+    }
+
     public void enableAnswerButtons() {
         for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
             button.getValue().setEnabled(true);
@@ -174,6 +201,9 @@ public class QuestionFragment extends Fragment {
     }
 
     public void gotoNextQuestion() {
+//        while(infoboxesList.isEmpty()) {
+//
+//        }
         enableAnswerButtons();
         usedHint = false;
         hintButton.setEnabled(true);
@@ -215,6 +245,28 @@ public class QuestionFragment extends Fragment {
 
     public QuestionContent getQuestionContent() {
         QuestionContent qc = new QuestionContent();
+        // This should randomly work to generate answers, but I couldn't access the database correctly
+//        Infobox questionInfobox = infoboxesList.get(questionCount);
+//        qc.imagePath = "";
+//        qc.questionString = "What is this person's name?";
+//        qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
+//        qc.correctAnswer = new Random().nextInt(4);
+//        qc.answers.set(qc.correctAnswer, questionInfobox.getName());
+//        ArrayList<Integer> otherAnswers = new ArrayList<>();
+//        for (int i = 0; i < 4; i++) {
+//            if (i == qc.correctAnswer) {
+//                continue;
+//            }
+//            while(qc.answers.get(i).equals("")) {
+//                int otherAnswerIndex = new Random().nextInt(infoboxesList.size());
+//                if (otherAnswers.contains(otherAnswerIndex)) {
+//                    continue;
+//                }
+//                otherAnswers.add(otherAnswerIndex);
+//                qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
+//            }
+//        }
+
         if (questionCount%2 == 0) {
             qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
             qc.questionString = "What is this person's name?";

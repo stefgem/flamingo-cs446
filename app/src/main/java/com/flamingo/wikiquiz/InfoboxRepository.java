@@ -11,6 +11,7 @@ public class InfoboxRepository {
 
     private InfoboxDao _infoboxDao;
     private LiveData<List<Infobox>> _allInfoboxes;
+    private Infobox[] _infoboxesInCategory;
 
     InfoboxRepository(Application application) {
         InfoboxRoomDatabase db = InfoboxRoomDatabase.getDatabase(application);
@@ -20,6 +21,10 @@ public class InfoboxRepository {
 
     LiveData<List<Infobox>> getAllInfoboxes() {
         return _allInfoboxes;
+    }
+
+    LiveData<List<Infobox>> getInfoboxesInCategory(String category) {
+        return _infoboxDao.getInfoboxesInCategory(category);
     }
 
     public void insert(Infobox infobox) {
