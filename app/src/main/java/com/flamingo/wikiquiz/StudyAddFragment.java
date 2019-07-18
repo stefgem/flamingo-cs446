@@ -30,7 +30,7 @@ public class StudyAddFragment extends Fragment {
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
         questionViewModel
-                .getInfoboxesInCategory("Science & Math")
+                .getAllInfoBoxes()
                 .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
                     @Override
                     public void onChanged(@Nullable final List<Infobox> infoboxes) {
@@ -45,22 +45,43 @@ public class StudyAddFragment extends Fragment {
 
                             }
 
-                            // this is just debug stuff
-                            // TODO delete this
-                            List<Integer> idList = questionViewModel.getInfoboxIdList();
-                            titleTextView.setText("{");
+
+                        }
+                    }
+                });
+        questionViewModel.getInfoboxIdList().
+                observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+                    @Override
+                    public void onChanged(List<Integer> integers) {
+
+                        // this is just debug stuff
+                        // see usage of getInfoboxIdList() and getInfoboxById(int id)
+                        // TODO delete this
+                        List<Integer> idList = questionViewModel.getInfoboxIdList().getValue();
+
+                        if (idList != null) {
+                            titleTextView.setText("{ ");
                             int lastIndex = -1;
-                            for (Integer n : idList) {
-                                titleTextView.append(n + ", ");
-                                lastIndex = n;
+                            for (int i = 0; i < idList.size(); i++) {
+                                titleTextView.append("" + idList.get(i));
+                                if ((i + 1) < idList.size()) {
+                                    titleTextView.append(", ");
+                                }
+                                lastIndex = idList.get(i);
                             }
-                            titleTextView.setText("}");
-                            if(lastIndex != -1) {
-                                titleTextView.append("    infobox at " + lastIndex + " is " + questionViewModel.getInfoboxById(lastIndex).getName());
+
+                            titleTextView.append("}");
+                            if ((lastIndex != -1) && questionViewModel.getInfoboxById(lastIndex) != null) {
+                                titleTextView.append(" \n  infobox at " + lastIndex + " is " +
+                                        questionViewModel.getInfoboxById(lastIndex).getName());
+                            } else {
+                                // it this shows up something is wrong w/ my getInfoboxById implementation
+                                titleTextView.append(" \n " + lastIndex + " is null");
                             }
                         }
                     }
                 });
+
 //        questionViewModel
 //                .getAllInfoBoxes()
 //                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {

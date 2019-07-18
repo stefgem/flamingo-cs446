@@ -32,6 +32,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
                             InfoboxRoomDatabase.class, "infobox_database")
                             .addCallback(sRoomDatabaseCallback)
                             .fallbackToDestructiveMigration() //destroy db when version# increased
+                            .allowMainThreadQueries() // a necessary evil
                             .fallbackToDestructiveMigrationOnDowngrade()
                             .build();
                 }

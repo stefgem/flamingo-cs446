@@ -23,7 +23,7 @@ public interface InfoboxDao {
     Infobox getInfoboxById(int id);
 
     @Query("SELECT rowid FROM infobox_table ORDER BY rowid ASC")
-    List<Integer> getInfoboxIdList();
+    LiveData<List<Integer>> getInfoboxIdList();
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(Infobox infobox);
