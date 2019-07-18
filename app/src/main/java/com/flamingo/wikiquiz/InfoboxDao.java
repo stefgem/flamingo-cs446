@@ -19,6 +19,12 @@ public interface InfoboxDao {
     @Query("SELECT * FROM infobox_table WHERE category = :category")
     LiveData<List<Infobox>> getInfoboxesInCategory(String category);
 
+    @Query("SELECT * FROM infobox_table WHERE rowid = :id LIMIT 1")
+    Infobox getInfoboxById(int id);
+
+    @Query("SELECT rowid FROM infobox_table ORDER BY rowid ASC")
+    List<Integer> getInfoboxIdList();
+
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(Infobox infobox);
 
