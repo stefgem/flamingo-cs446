@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 public class QuestionViewModel extends AndroidViewModel {
 
     private InfoboxRepository _repository;
-    private LiveData<List<Infobox>> _allInfoBoxes;
+    private List<Infobox> _allInfoBoxes;
     private Infobox[] _infoboxesInCategory;
 
     public QuestionViewModel(@NonNull Application application) {
@@ -24,7 +24,7 @@ public class QuestionViewModel extends AndroidViewModel {
         _allInfoBoxes = _repository.getAllInfoboxes();
     }
 
-    LiveData<List<Infobox>> getAllInfoBoxes() {
+    List<Infobox> getAllInfoBoxes() {
         return _allInfoBoxes;
     }
 

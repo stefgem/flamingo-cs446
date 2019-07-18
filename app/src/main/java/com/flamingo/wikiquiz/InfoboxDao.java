@@ -14,7 +14,7 @@ import java.util.List;
 public interface InfoboxDao {
 
     @Query("SELECT * FROM infobox_table ORDER BY rowId ASC")
-    LiveData<List<Infobox>> getAllInfoboxes();
+    List<Infobox> getAllInfoboxes();
 
     @Query("SELECT * FROM infobox_table WHERE category = :category")
     LiveData<List<Infobox>> getInfoboxesInCategory(String category);

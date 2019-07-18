@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 public class InfoboxRepository {
 
     private InfoboxDao _infoboxDao;
-    private LiveData<List<Infobox>> _allInfoboxes;
+    private List<Infobox> _allInfoboxes;
     private Infobox _queriedInfobox;
     private LiveData<List<Integer>> _infoboxIdList;
     private Infobox[] _infoboxesInCategory;
@@ -24,7 +24,7 @@ public class InfoboxRepository {
         _infoboxIdList = _infoboxDao.getInfoboxIdList();
     }
 
-    LiveData<List<Infobox>> getAllInfoboxes() {
+    List<Infobox> getAllInfoboxes() {
         return _allInfoboxes;
     }
 

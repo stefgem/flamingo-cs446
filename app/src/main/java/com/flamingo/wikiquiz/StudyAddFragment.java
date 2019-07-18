@@ -29,7 +29,7 @@ public class StudyAddFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
-        questionViewModel
+/*        questionViewModel
                 .getAllInfoBoxes()
                 .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
                     @Override
@@ -48,7 +48,7 @@ public class StudyAddFragment extends Fragment {
 
                         }
                     }
-                });
+                });*/
         questionViewModel.getInfoboxIdList().
                 observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
                     @Override

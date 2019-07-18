@@ -86,7 +86,7 @@ public class QuestionFragment extends Fragment {
         personImageView = view.findViewById(R.id.personImageView);
 
         progressBar = view.findViewById(R.id.quizProgressBar);
-        infoboxesList = new ArrayList<>();
+       // infoboxesList = new ArrayList<>();
 
         answerButtons = new HashMap<Integer, Button>();
         answerButtons.put(0, (Button)view.findViewById(R.id.answerButton1));
@@ -138,6 +138,12 @@ public class QuestionFragment extends Fragment {
             }
         });
         questionTextView = view.findViewById(R.id.QuizQuestionTextView);
+
+        questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
+
+        infoboxesList = questionViewModel.getAllInfoBoxes();
+        infoboxSize = infoboxesList.size();
+
         gotoNextQuestion();
 
         return view;
@@ -148,18 +154,25 @@ public class QuestionFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
 //        TODO: This part isn't working to fetch the database
-        questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
-        questionViewModel
-                .getInfoboxesInCategory("Science & Math")
-                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
-                    @Override
-                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
-                        Log.e("This part with database", "error");
-                        infoboxesList.addAll(infoboxes);
-                        infoboxSize = infoboxesList.size();
-                    }
-                });
-//        gotoNextQuestion();
+        infoboxesList = new ArrayList<>();
+
+        /*questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
+
+        infoboxesList = questionViewModel.getAllInfoBoxes();
+        infoboxSize = infoboxesList.size();*/
+//        questionViewModel
+//                .getAllInfoBoxes()
+//                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
+//                    @Override
+//                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
+//                        Log.e("This part with database", "error");
+//                        infoboxesList.addAll(infoboxes);
+//                        infoboxSize = infoboxesList.size();
+//                        gotoNextQuestion(); // TODO tempo
+//                    }
+//                });
+//
+//        // gotoNextQuestion();
     }
 
     public void enableAnswerButtons() {
@@ -251,53 +264,54 @@ public class QuestionFragment extends Fragment {
 
         QuestionContent qc = new QuestionContent();
         int chooseQuestion = new Random().nextInt(numberOfQuestionTypes);
-
-        if (chooseQuestion == 0) {
-            int questionInfoboxIndex = new Random().nextInt(infoboxSize);
-            Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
-            qc.imagePath = "";
-            qc.questionString = "What is this person's name?";
-            qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
-            qc.correctAnswer = new Random().nextInt(4);
-            qc.answers.set(qc.correctAnswer, questionInfobox.getName());
-            ArrayList<Integer> otherAnswers = new ArrayList<>();
-            otherAnswers.add(questionInfoboxIndex);
-            for (int i = 0; i < 4; i++) {
-                if (i == qc.correctAnswer) {
-                    continue;
-                }
-                while (qc.answers.get(i).equals("")) {
-                    int otherAnswerIndex = new Random().nextInt(infoboxSize);
-                    if (otherAnswers.contains(otherAnswerIndex)) {
+        chooseQuestion = 1;
+        if (infoboxSize != 0) {
+            if (chooseQuestion == 0) {
+                int questionInfoboxIndex = new Random().nextInt(infoboxSize);
+                Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
+                qc.imagePath = "";
+                qc.questionString = "What is this person's name?";
+                qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
+                qc.correctAnswer = new Random().nextInt(4);
+                qc.answers.set(qc.correctAnswer, questionInfobox.getName());
+                ArrayList<Integer> otherAnswers = new ArrayList<>();
+                otherAnswers.add(questionInfoboxIndex);
+                for (int i = 0; i < 4; i++) {
+                    if (i == qc.correctAnswer) {
                         continue;
                     }
-                    otherAnswers.add(otherAnswerIndex);
-                    qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
+                    while (qc.answers.get(i).equals("")) {
+                        int otherAnswerIndex = new Random().nextInt(infoboxSize);
+                        if (otherAnswers.contains(otherAnswerIndex)) {
+                            continue;
+                        }
+                        otherAnswers.add(otherAnswerIndex);
+                        qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
+                    }
                 }
-            }
-        }
-        else {
-            int questionInfoboxIndex = new Random().nextInt(infoboxSize);
-            Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
-            qc.imagePath = "";
-            qc.questionString = "What year was this person born?";
-            qc.answersYear = new ArrayList<Integer>(Collections.nCopies(4, 0));
-            qc.correctAnswer = new Random().nextInt(4);
-            qc.answersYear.set(qc.correctAnswer, questionInfobox.getBirthYear());
-            ArrayList<Integer> otherAnswers = new ArrayList<>();
-            otherAnswers.add(questionInfobox.getBirthYear());
-            for (int i = 0; i < 4; i++) {
-                if (i == qc.correctAnswer) {
-                    continue;
-                }
-                while (qc.answersYear.get(i).equals(0)) {
-                    int otherAnswerIndex = new Random().nextInt(infoboxSize);
-                    Infobox otherInfobox = infoboxesList.get(otherAnswerIndex);
-                    if (otherAnswers.contains(otherInfobox.getBirthYear())) {
+            } else {
+                int questionInfoboxIndex = new Random().nextInt(infoboxSize);
+                Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
+                qc.imagePath = "";
+                qc.questionString = "What year was this person born?";
+                qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
+                qc.correctAnswer = new Random().nextInt(4);
+                qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
+                ArrayList<String> otherAnswers = new ArrayList<>();
+                otherAnswers.add(Integer.toString(questionInfobox.getBirthYear()));
+                for (int i = 0; i < 4; i++) {
+                    if (i == qc.correctAnswer) {
                         continue;
                     }
-                    otherAnswers.add(otherInfobox.getBirthYear());
-                    qc.answersYear.set(i, otherInfobox.getBirthYear());
+                    while (qc.answers.get(i).equals("")) {
+                        int otherAnswerIndex = new Random().nextInt(infoboxSize);
+                        Infobox otherInfobox = infoboxesList.get(otherAnswerIndex);
+                        if (otherAnswers.contains(Integer.toString(otherInfobox.getBirthYear()))) {
+                            continue;
+                        }
+                        otherAnswers.add(Integer.toString(otherInfobox.getBirthYear()));
+                        qc.answers.set(i, Integer.toString(otherInfobox.getBirthYear()));
+                    }
                 }
             }
         }
@@ -329,7 +343,8 @@ public class QuestionFragment extends Fragment {
         Log.e("Question: ", "" + questionCount);
 
         Picasso.get()
-                .load(questionContent.imagePath)
+                //.load(questionContent.imagePath)
+                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
                 .resize(200, 200)
                 .centerCrop()
                 .into(personImageView);
@@ -338,8 +353,10 @@ public class QuestionFragment extends Fragment {
         correctAnswer = questionContent.correctAnswer;
 
         ArrayList<String> answers = questionContent.answers;
-        for (int i = 0; i < answers.size(); i++) {
-            answerButtons.get(i).setText(answers.get(i));
+        if (answers != null ) {
+            for (int i = 0; i < answers.size(); i++) {
+                answerButtons.get(i).setText(answers.get(i));
+            }
         }
     }
 
