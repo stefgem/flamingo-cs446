@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -17,7 +19,8 @@ import java.util.List;
 public class StudyAddFragment extends Fragment {
 
     private QuestionViewModel questionViewModel;
-    private TextView textView;
+    private RecyclerView recyclerView;
+    private InfoboxListAdapter adapter;
 
     public StudyAddFragment() {
 
@@ -28,14 +31,17 @@ public class StudyAddFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
-        questionViewModel
-                .getInfoboxesInCategory("Science & Math")
+        questionViewModel.getAllInfoBoxes()
                 .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
                     @Override
                     public void onChanged(@Nullable final List<Infobox> infoboxes) {
                         // Update the cached copy of the words in the adapter.
 
-                        if (textView != null) {
+                        if(adapter != null){
+                            adapter.setInfoboxes(infoboxes);
+                        }
+
+         /*               if (textView != null) {
                             textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
                             for (Infobox infobox : infoboxes) {
                                 String line = infobox.getRowId() + " , " + infobox.getName() + " , "
@@ -44,7 +50,7 @@ public class StudyAddFragment extends Fragment {
 
                             }
 
-                        }
+                        } */
                     }
                 });
 //        questionViewModel
@@ -73,9 +79,14 @@ public class StudyAddFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_study_add, container, false);
-        textView = view.findViewById(R.id.database_textview);
+        recyclerView = view.findViewById(R.id.database_recyclerview);
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
+
+        recyclerView = view.findViewById(R.id.database_recyclerview);
+        adapter = new InfoboxListAdapter(getContext());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return view;
     }

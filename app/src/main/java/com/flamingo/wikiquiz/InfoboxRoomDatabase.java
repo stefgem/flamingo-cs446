@@ -48,16 +48,14 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
                 public void onCreate(@NonNull SupportSQLiteDatabase db) {
                     super.onCreate(db);
 
-                    // decided put Populate call in onOpen instead for now
-                    // ideally would be here, we would do initial populating of the DB only once
-                    // new PopulateDbAsync(INSTANCE).execute();
+                    new PopulateDbAsync(INSTANCE).execute();
                 }
 
                 // this gets called every time the DB is opened
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     super.onOpen(db);
-                    new PopulateDbAsync(INSTANCE).execute();
+                //    new PopulateDbAsync(INSTANCE).execute();
                 }
             };
 
@@ -71,7 +69,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-            _dao.deleteAll();  // this is only useful if calling Populate from an onOpen call
+         //   _dao.deleteAll();  // this is only useful if calling Populate from an onOpen call
 
             Infobox infobox;
 
