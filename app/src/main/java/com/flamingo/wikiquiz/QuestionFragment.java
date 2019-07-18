@@ -40,6 +40,9 @@ public class QuestionFragment extends Fragment {
     private int correctAnswer = 0;
     private int maxQuestions = 3;
     private int currentScore = 0;
+    private int chooseQuestion = 0;
+    private int numberOfQuestionTypes = 2;
+    private int infoboxSize = 0;
     private boolean usedHint = false;
     private String SUBMIT_STRING = "Submit Answer";
     private String NEXT_STRING = "Next Question";
@@ -153,6 +156,7 @@ public class QuestionFragment extends Fragment {
                     public void onChanged(@Nullable final List<Infobox> infoboxes) {
                         Log.e("This part with database", "error");
                         infoboxesList.addAll(infoboxes);
+                        infoboxSize = infoboxesList.size();
                     }
                 });
 //        gotoNextQuestion();
@@ -244,50 +248,81 @@ public class QuestionFragment extends Fragment {
     }
 
     public QuestionContent getQuestionContent() {
-        QuestionContent qc = new QuestionContent();
-        // This should randomly work to generate answers, but I couldn't access the database correctly
-//        Infobox questionInfobox = infoboxesList.get(questionCount);
-//        qc.imagePath = "";
-//        qc.questionString = "What is this person's name?";
-//        qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
-//        qc.correctAnswer = new Random().nextInt(4);
-//        qc.answers.set(qc.correctAnswer, questionInfobox.getName());
-//        ArrayList<Integer> otherAnswers = new ArrayList<>();
-//        for (int i = 0; i < 4; i++) {
-//            if (i == qc.correctAnswer) {
-//                continue;
-//            }
-//            while(qc.answers.get(i).equals("")) {
-//                int otherAnswerIndex = new Random().nextInt(infoboxesList.size());
-//                if (otherAnswers.contains(otherAnswerIndex)) {
-//                    continue;
-//                }
-//                otherAnswers.add(otherAnswerIndex);
-//                qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
-//            }
-//        }
 
-        if (questionCount%2 == 0) {
-            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
+        QuestionContent qc = new QuestionContent();
+        int chooseQuestion = new Random().nextInt(numberOfQuestionTypes);
+
+        if (chooseQuestion == 0) {
+            int questionInfoboxIndex = new Random().nextInt(infoboxSize);
+            Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
+            qc.imagePath = "";
             qc.questionString = "What is this person's name?";
-            qc.answers = new ArrayList<>();
-            qc.answers.add("Harry Houdini");
-            qc.answers.add("Salvador Dali");
-            qc.answers.add("Charlie Chaplin");
-            qc.answers.add("Nikola Tesla");
-            qc.correctAnswer = 3;
+            qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
+            qc.correctAnswer = new Random().nextInt(4);
+            qc.answers.set(qc.correctAnswer, questionInfobox.getName());
+            ArrayList<Integer> otherAnswers = new ArrayList<>();
+            otherAnswers.add(questionInfoboxIndex);
+            for (int i = 0; i < 4; i++) {
+                if (i == qc.correctAnswer) {
+                    continue;
+                }
+                while (qc.answers.get(i).equals("")) {
+                    int otherAnswerIndex = new Random().nextInt(infoboxSize);
+                    if (otherAnswers.contains(otherAnswerIndex)) {
+                        continue;
+                    }
+                    otherAnswers.add(otherAnswerIndex);
+                    qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
+                }
+            }
         }
         else {
-            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg";
-            qc.questionString = "What is this person's Date?";
-            qc.answers = new ArrayList<>();
-            qc.answers.add("Alice");
-            qc.answers.add("Bob");
-            qc.answers.add("Eve");
-            qc.answers.add("Mellisa");
-            qc.correctAnswer = 2;
+            int questionInfoboxIndex = new Random().nextInt(infoboxSize);
+            Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
+            qc.imagePath = "";
+            qc.questionString = "What year was this person born?";
+            qc.answersYear = new ArrayList<Integer>(Collections.nCopies(4, 0));
+            qc.correctAnswer = new Random().nextInt(4);
+            qc.answersYear.set(qc.correctAnswer, questionInfobox.getBirthYear());
+            ArrayList<Integer> otherAnswers = new ArrayList<>();
+            otherAnswers.add(questionInfobox.getBirthYear());
+            for (int i = 0; i < 4; i++) {
+                if (i == qc.correctAnswer) {
+                    continue;
+                }
+                while (qc.answersYear.get(i).equals(0)) {
+                    int otherAnswerIndex = new Random().nextInt(infoboxSize);
+                    Infobox otherInfobox = infoboxesList.get(otherAnswerIndex);
+                    if (otherAnswers.contains(otherInfobox.getBirthYear())) {
+                        continue;
+                    }
+                    otherAnswers.add(otherInfobox.getBirthYear());
+                    qc.answersYear.set(i, otherInfobox.getBirthYear());
+                }
+            }
         }
         return qc;
+//        if (questionCount%2 == 0) {
+//            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
+//            qc.questionString = "What is this person's name?";
+//            qc.answers = new ArrayList<>();
+//            qc.answers.add("Harry Houdini");
+//            qc.answers.add("Salvador Dali");
+//            qc.answers.add("Charlie Chaplin");
+//            qc.answers.add("Nikola Tesla");
+//            qc.correctAnswer = 3;
+//        }
+//        else {
+//            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg";
+//            qc.questionString = "What is this person's Date?";
+//            qc.answers = new ArrayList<>();
+//            qc.answers.add("Alice");
+//            qc.answers.add("Bob");
+//            qc.answers.add("Eve");
+//            qc.answers.add("Mellisa");
+//            qc.correctAnswer = 2;
+//        }
+//        return qc;
     }
 
     public void populateQuestion(QuestionContent questionContent) {
