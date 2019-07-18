@@ -3,6 +3,7 @@ package com.flamingo.wikiquiz;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
@@ -32,6 +33,11 @@ public class InfoboxRepository {
     }
 
     public void deleteAll() {_infoboxDao.deleteAll(); }
+
+    @Nullable // Note that this method may return null!!
+    public Infobox getInfoboxById(int id){ return _infoboxDao.getInfoboxById(id); }
+
+    public List<Integer> getInfoboxIdList(){ return _infoboxDao.getInfoboxIdList(); }
 
     private static class insertAsyncTask extends AsyncTask<Infobox, Void, Void> {
 

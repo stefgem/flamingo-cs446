@@ -18,6 +18,7 @@ public class StudyAddFragment extends Fragment {
 
     private QuestionViewModel questionViewModel;
     private TextView textView;
+    private TextView titleTextView;
 
     public StudyAddFragment() {
 
@@ -44,6 +45,19 @@ public class StudyAddFragment extends Fragment {
 
                             }
 
+                            // this is just debug stuff
+                            // TODO delete this
+                            List<Integer> idList = questionViewModel.getInfoboxIdList();
+                            titleTextView.setText("{");
+                            int lastIndex = -1;
+                            for (Integer n : idList) {
+                                titleTextView.append(n + ", ");
+                                lastIndex = n;
+                            }
+                            titleTextView.setText("}");
+                            if(lastIndex != -1) {
+                                titleTextView.append("    infobox at " + lastIndex + " is " + questionViewModel.getInfoboxById(lastIndex).getName());
+                            }
                         }
                     }
                 });
@@ -74,6 +88,7 @@ public class StudyAddFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_study_add, container, false);
         textView = view.findViewById(R.id.database_textview);
+        titleTextView = view.findViewById(R.id.database_title);
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
 

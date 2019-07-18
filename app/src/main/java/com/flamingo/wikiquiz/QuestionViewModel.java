@@ -3,6 +3,7 @@ package com.flamingo.wikiquiz;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -32,7 +33,16 @@ public class QuestionViewModel extends AndroidViewModel {
         _repository.insert(infobox);
     }
 
-    public void deleteAllDatabaseRows(){
+    public void deleteAllDatabaseRows() {
         _repository.deleteAll();
+    }
+
+    @Nullable // if the id doesn't match an entry, this method will return null
+    public Infobox getInfoboxById(int id) {
+        return _repository.getInfoboxById(id);
+    }
+
+    public List<Integer> getInfoboxIdList() {
+        return _repository.getInfoboxIdList();
     }
 }
