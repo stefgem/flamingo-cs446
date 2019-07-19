@@ -4,13 +4,17 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -56,6 +60,9 @@ public class LaunchMultiplayerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkEnableBluetooth()) {
+                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                    LaunchMultiplayerFragment.this.getActivity().registerReceiver(receiver, filter);
+                    adapter.startDiscovery();
                     //ConnectThread connectThread = new ConnectThread()
                 }
                 else {
@@ -66,6 +73,21 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         return view;
     }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Discovery has found a device. Get the BluetoothDevice
+                // object and its info from the Intent.
+                Toast.makeText(context, "ACTION_FOUND", Toast.LENGTH_SHORT).show();
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+            }
+        }
+    };
 
     public boolean checkEnableBluetooth() {
         int REQUEST_ENABLE_BT = 1234;
@@ -91,6 +113,8 @@ public class LaunchMultiplayerFragment extends Fragment {
 //        }
 //        return bluetoothDevice;
 //    }
+
+
 
     private class AcceptThread extends Thread {
         private final BluetoothServerSocket mmServerSocket;
@@ -140,7 +164,6 @@ public class LaunchMultiplayerFragment extends Fragment {
         public ConnectThread(BluetoothDevice device) {
             BluetoothSocket tmp = null;
             mmDevice = device;
-            UUID app_uuid = UUID.fromString("29a7e265-1ad1-4879-873a-51e316bdfa2b");
 
             try {
                 tmp = mmDevice.createRfcommSocketToServiceRecord(app_uuid);
