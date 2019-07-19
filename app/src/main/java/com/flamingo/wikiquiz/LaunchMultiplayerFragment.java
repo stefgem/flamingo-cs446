@@ -46,6 +46,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                             new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                     discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 120);
                     startActivity(discoverableIntent);
+                    Toast.makeText(getContext(), "Device now discoverable", Toast.LENGTH_SHORT).show();
                     AcceptThread acceptThread = new AcceptThread();
                     acceptThread.run();
                 }
@@ -63,6 +64,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                     LaunchMultiplayerFragment.this.getActivity().registerReceiver(receiver, filter);
                     adapter.startDiscovery();
+                    Toast.makeText(getContext(), "Began discovery", Toast.LENGTH_SHORT).show();
                     //ConnectThread connectThread = new ConnectThread()
                 }
                 else {
@@ -134,6 +136,7 @@ public class LaunchMultiplayerFragment extends Fragment {
             BluetoothSocket socket = null;
             while (true) {
                 try {
+                    Toast.makeText(getContext(), "Opening Socket", Toast.LENGTH_SHORT).show();
                     socket = mmServerSocket.accept();
                 } catch (IOException e) {
                     Log.e("AcceptThread", "Socket's accept() method failed", e);
