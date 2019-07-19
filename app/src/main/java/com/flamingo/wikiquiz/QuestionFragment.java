@@ -40,13 +40,9 @@ public class QuestionFragment extends Fragment {
     private int correctAnswer = 0;
     private int maxQuestions = 3;
     private int currentScore = 0;
-    private int chooseQuestion = 0;
-    private int numberOfQuestionTypes = 2;
-    private int infoboxSize = 0;
     private boolean usedHint = false;
     private String SUBMIT_STRING = "Submit Answer";
     private String NEXT_STRING = "Next Question";
-
     private ImageView personImageView;
     private Button submitButton, hintButton, skipButton;
     private HashMap<Integer, Button> answerButtons;
@@ -86,13 +82,12 @@ public class QuestionFragment extends Fragment {
         personImageView = view.findViewById(R.id.personImageView);
 
         progressBar = view.findViewById(R.id.quizProgressBar);
-       // infoboxesList = new ArrayList<>();
 
         answerButtons = new HashMap<Integer, Button>();
-        answerButtons.put(0, (Button)view.findViewById(R.id.answerButton1));
-        answerButtons.put(1, (Button)view.findViewById(R.id.answerButton2));
-        answerButtons.put(2, (Button)view.findViewById(R.id.answerButton3));
-        answerButtons.put(3, (Button)view.findViewById(R.id.answerButton4));
+        answerButtons.put(0, (Button) view.findViewById(R.id.answerButton1));
+        answerButtons.put(1, (Button) view.findViewById(R.id.answerButton2));
+        answerButtons.put(2, (Button) view.findViewById(R.id.answerButton3));
+        answerButtons.put(3, (Button) view.findViewById(R.id.answerButton4));
 
         skipButton = view.findViewById(R.id.skipButton);
         skipButton.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +123,7 @@ public class QuestionFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((Button)v).getText().equals(SUBMIT_STRING)) {
+                if (((Button) v).getText().equals(SUBMIT_STRING)) {
                     submitAnswer();
                     submitButton.setText(NEXT_STRING);
                 } else {
@@ -142,37 +137,10 @@ public class QuestionFragment extends Fragment {
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
 
         infoboxesList = questionViewModel.getAllInfoBoxes();
-        infoboxSize = infoboxesList.size();
 
         gotoNextQuestion();
 
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-//        TODO: This part isn't working to fetch the database
-        infoboxesList = new ArrayList<>();
-
-        /*questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
-
-        infoboxesList = questionViewModel.getAllInfoBoxes();
-        infoboxSize = infoboxesList.size();*/
-//        questionViewModel
-//                .getAllInfoBoxes()
-//                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
-//                    @Override
-//                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
-//                        Log.e("This part with database", "error");
-//                        infoboxesList.addAll(infoboxes);
-//                        infoboxSize = infoboxesList.size();
-//                        gotoNextQuestion(); // TODO tempo
-//                    }
-//                });
-//
-//        // gotoNextQuestion();
     }
 
     public void enableAnswerButtons() {
@@ -204,7 +172,7 @@ public class QuestionFragment extends Fragment {
 
         toast.setText(toastString);
         toast.show();
-        
+
         disableAnswerButtons();
         hintButton.setEnabled(false);
         skipButton.setEnabled(false);
@@ -218,21 +186,19 @@ public class QuestionFragment extends Fragment {
     }
 
     public void gotoNextQuestion() {
-//        while(infoboxesList.isEmpty()) {
-//
-//        }
+
         enableAnswerButtons();
         usedHint = false;
         hintButton.setEnabled(true);
         skipButton.setEnabled(true);
         if (questionCount < maxQuestions) {
             float percent = (float) questionCount / (float) maxQuestions;
-            ((ConstraintLayout.LayoutParams)progressBar.getLayoutParams()).matchConstraintPercentWidth = percent;
+            ((ConstraintLayout.LayoutParams) progressBar.getLayoutParams()).matchConstraintPercentWidth = percent;
             progressBar.requestLayout();
             for (int i = 0; i < answerButtons.size(); i++) {
                 answerButtons.get(i).getBackground().clearColorFilter();
             }
-            QuestionContent questionContent = getQuestionContent();
+            QuestionContent questionContent = questionViewModel.getQuestionContent();
             populateQuestion(questionContent);
             questionCount++;
 
@@ -241,7 +207,6 @@ public class QuestionFragment extends Fragment {
             bundle.putInt("score", currentScore);
             NavHostFragment.findNavController(this).navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
         }
-
     }
 
     public void setupAnswerButtons() {
@@ -260,62 +225,62 @@ public class QuestionFragment extends Fragment {
         }
     }
 
-    public QuestionContent getQuestionContent() {
 
-        QuestionContent qc = new QuestionContent();
-        int chooseQuestion = new Random().nextInt(numberOfQuestionTypes);
-
-        if (infoboxSize != 0) {
-            if (chooseQuestion == 0) {
-                int questionInfoboxIndex = new Random().nextInt(infoboxSize);
-                Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
-                qc.imagePath = "";
-                qc.questionString = "What is this person's name?";
-                qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
-                qc.correctAnswer = new Random().nextInt(4);
-                qc.answers.set(qc.correctAnswer, questionInfobox.getName());
-                ArrayList<Integer> otherAnswers = new ArrayList<>();
-                otherAnswers.add(questionInfoboxIndex);
-                for (int i = 0; i < 4; i++) {
-                    if (i == qc.correctAnswer) {
-                        continue;
-                    }
-                    while (qc.answers.get(i).equals("")) {
-                        int otherAnswerIndex = new Random().nextInt(infoboxSize);
-                        if (otherAnswers.contains(otherAnswerIndex)) {
-                            continue;
-                        }
-                        otherAnswers.add(otherAnswerIndex);
-                        qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
-                    }
-                }
-            } else {
-                int questionInfoboxIndex = new Random().nextInt(infoboxSize);
-                Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
-                qc.imagePath = "";
-                qc.questionString = "What year was this person born?";
-                qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
-                qc.correctAnswer = new Random().nextInt(4);
-                qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
-                ArrayList<String> otherAnswers = new ArrayList<>();
-                otherAnswers.add(Integer.toString(questionInfobox.getBirthYear()));
-                for (int i = 0; i < 4; i++) {
-                    if (i == qc.correctAnswer) {
-                        continue;
-                    }
-                    while (qc.answers.get(i).equals("")) {
-                        int otherAnswerIndex = new Random().nextInt(infoboxSize);
-                        Infobox otherInfobox = infoboxesList.get(otherAnswerIndex);
-                        if (otherAnswers.contains(Integer.toString(otherInfobox.getBirthYear()))) {
-                            continue;
-                        }
-                        otherAnswers.add(Integer.toString(otherInfobox.getBirthYear()));
-                        qc.answers.set(i, Integer.toString(otherInfobox.getBirthYear()));
-                    }
-                }
-            }
-        }
-        return qc;
+//    public QuestionContent getQuestionContent() {
+//
+//        QuestionContent qc = new QuestionContent();
+//        int chooseQuestion = new Random().nextInt(numberOfQuestionTypes);
+//
+//        if (infoboxSize != 0) {
+//            if (chooseQuestion == 0) {
+//                int questionInfoboxIndex = new Random().nextInt(infoboxSize);
+//                Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
+//                qc.imagePath = "";
+//                qc.questionString = "What is this person's name?";
+//                qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
+//                qc.correctAnswer = new Random().nextInt(4);
+//                qc.answers.set(qc.correctAnswer, questionInfobox.getName());
+//                ArrayList<Integer> otherAnswers = new ArrayList<>();
+//                otherAnswers.add(questionInfoboxIndex);
+//                for (int i = 0; i < 4; i++) {
+//                    if (i == qc.correctAnswer) {
+//                        continue;
+//                    }
+//                    while (qc.answers.get(i).equals("")) {
+//                        int otherAnswerIndex = new Random().nextInt(infoboxSize);
+//                        if (otherAnswers.contains(otherAnswerIndex)) {
+//                            continue;
+//                        }
+//                        otherAnswers.add(otherAnswerIndex);
+//                        qc.answers.set(i, infoboxesList.get(otherAnswerIndex).getName());
+//                    }
+//                }
+//            } else {
+//                int questionInfoboxIndex = new Random().nextInt(infoboxSize);
+//                Infobox questionInfobox = infoboxesList.get(questionInfoboxIndex);
+//                qc.imagePath = "";
+//                qc.questionString = "What year was this person born?";
+//                qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
+//                qc.correctAnswer = new Random().nextInt(4);
+//                qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
+//                ArrayList<String> otherAnswers = new ArrayList<>();
+//                otherAnswers.add(Integer.toString(questionInfobox.getBirthYear()));
+//                for (int i = 0; i < 4; i++) {
+//                    if (i == qc.correctAnswer) {
+//                        continue;
+//                    }
+//                    while (qc.answers.get(i).equals("")) {
+//                        int otherAnswerIndex = new Random().nextInt(infoboxSize);
+//                        Infobox otherInfobox = infoboxesList.get(otherAnswerIndex);
+//                        if (otherAnswers.contains(Integer.toString(otherInfobox.getBirthYear()))) {
+//                            continue;
+//                        }
+//                        otherAnswers.add(Integer.toString(otherInfobox.getBirthYear()));
+//                        qc.answers.set(i, Integer.toString(otherInfobox.getBirthYear()));
+//                    }
+//                }
+//            }
+//        } return qc;
 //        if (questionCount%2 == 0) {
 //            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
 //            qc.questionString = "What is this person's name?";
@@ -335,9 +300,8 @@ public class QuestionFragment extends Fragment {
 //            qc.answers.add("Eve");
 //            qc.answers.add("Mellisa");
 //            qc.correctAnswer = 2;
-//        }
-//        return qc;
-    }
+//        } return qc;
+//    }
 
     public void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + questionCount);
@@ -353,12 +317,11 @@ public class QuestionFragment extends Fragment {
         correctAnswer = questionContent.correctAnswer;
 
         ArrayList<String> answers = questionContent.answers;
-        if (answers != null ) {
+        if (answers != null) {
             for (int i = 0; i < answers.size(); i++) {
                 answerButtons.get(i).setText(answers.get(i));
             }
         }
     }
-
 
 }
