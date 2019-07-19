@@ -264,7 +264,7 @@ public class QuestionFragment extends Fragment {
 
         QuestionContent qc = new QuestionContent();
         int chooseQuestion = new Random().nextInt(numberOfQuestionTypes);
-        chooseQuestion = 1;
+
         if (infoboxSize != 0) {
             if (chooseQuestion == 0) {
                 int questionInfoboxIndex = new Random().nextInt(infoboxSize);
