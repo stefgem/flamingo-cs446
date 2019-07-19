@@ -11,11 +11,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -28,7 +33,13 @@ import java.util.UUID;
 public class LaunchMultiplayerFragment extends Fragment {
 
     private UUID app_uuid = UUID.fromString("29a7e265-1ad1-4879-873a-51e316bdfa2b");
-    private BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+    private BluetoothAdapter bluetoothAdapter;
+    private ArrayAdapter<String> deviceNamesAdapter;
+
+
+    //TODO maybe delete
+    //private ConnectedThread connectedThread; // bluetooth background worker thread to send and receive data
+    //private BluetoothSocket btSocket = null; // bi-directional client-to-client data path
 
 
     public LaunchMultiplayerFragment() {
@@ -41,7 +52,71 @@ public class LaunchMultiplayerFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_launch_multiplayer, container, false);
 
+        deviceNamesAdapter = new ArrayAdapter<String> (getContext(), android.R.layout.simple_list_item_1);
+        bluetoothAdapter =  BluetoothAdapter.getDefaultAdapter();
+
+        ListView devicesListView = view.findViewById(R.id.devicesListView);
+        devicesListView.setAdapter(deviceNamesAdapter);
+        devicesListView.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                //
+//                if(!bluetoothAdapter.isEnabled()) {
+//                    Toast.makeText(getContext(), "Bluetooth not on", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//
+           //  mBluetoothStatus.setText("Connecting...");
+               // Get the device MAC address, which is the last 17 chars in the View
+               String info = ((TextView) view).getText().toString();
+              final String address = info.substring(info.length() - 17);
+              final String name = info.substring(0,info.length() - 17);
+//
+//                // Spawn a new thread to avoid blocking the GUI one
+//                new Thread()
+//                {
+//                    public void run() {
+//                        boolean fail = false;
+//
+//                        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
+//
+//                        try {
+//                          btSocket  = createBluetoothSocket(device);
+//                        } catch (IOException e) {
+//                            fail = true;
+//                            Toast.makeText(getContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
+//                        }
+//                        // Establish the Bluetooth socket connection.
+//                        try {
+//                            btSocket.connect();
+//                        } catch (IOException e) {
+//                            try {
+//                                fail = true;
+//                                btSocket.close();
+//                                handler.obtainMessage(CONNECTING_STATUS, -1, -1)
+//                                        .sendToTarget();
+//                            } catch (IOException e2) {
+//                                //insert code to deal with this
+//                                Toast.makeText(getContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                        if(fail == false) {
+//                            mConnectedThread = new ConnectedThread(btSocket);
+//                            mConnectedThread.start();
+//
+//                            handler.obtainMessage(CONNECTING_STATUS, 1, -1, name)
+//                                    .sendToTarget();
+//                        }
+//                    }
+//                }.start();
+//            }
+//
+//            }
+    }});
+
         Button hostBtn = view.findViewById(R.id.hostSession);
+
         hostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,10 +145,10 @@ public class LaunchMultiplayerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkEnableBluetooth()) {
-                    if (adapter.isDiscovering()) {
-                        adapter.cancelDiscovery();
+                    if (bluetoothAdapter.isDiscovering()) {
+                        bluetoothAdapter.cancelDiscovery();
                     }
-                    adapter.startDiscovery();
+                    bluetoothAdapter.startDiscovery();
 
                     getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 
@@ -106,16 +181,19 @@ public class LaunchMultiplayerFragment extends Fragment {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
+                deviceNamesAdapter.add(deviceName + "\n" + deviceHardwareAddress);
+                deviceNamesAdapter.notifyDataSetChanged();
             }
         }
     };
 
     public boolean checkEnableBluetooth() {
         int REQUEST_ENABLE_BT = 1234;
-        if (adapter == null) {
+        if (bluetoothAdapter == null) {
             return false;
         }
-        if (!adapter.isEnabled()) {
+        if (!bluetoothAdapter.isEnabled()) {
+            deviceNamesAdapter.clear();
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
@@ -124,7 +202,7 @@ public class LaunchMultiplayerFragment extends Fragment {
 
 //    public BluetoothDevice findBluetoothDevice() {
 //        BluetoothDevice bluetoothDevice;
-//        Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+//        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 //        if (pairedDevices.size() > 0) {
 //            for (BluetoothDevice device : pairedDevices) {
 //                String deviceName = device.getName();
@@ -135,8 +213,6 @@ public class LaunchMultiplayerFragment extends Fragment {
 //        return bluetoothDevice;
 //    }
 
-
-
     private class AcceptThread extends Thread {
         private final BluetoothServerSocket mmServerSocket;
 
@@ -144,7 +220,7 @@ public class LaunchMultiplayerFragment extends Fragment {
             BluetoothServerSocket tmp = null;
 
             try {
-                tmp = adapter.listenUsingRfcommWithServiceRecord("WikiQuiz", app_uuid);
+                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("WikiQuiz", app_uuid);
             } catch (IOException e) {
                 Log.e("AcceptThread", "Socket's listen() method failed", e);
             }
@@ -196,7 +272,7 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
 
         public void run() {
-            adapter.cancelDiscovery();
+            bluetoothAdapter.cancelDiscovery();
 
             try {
                 mmSocket.connect();
