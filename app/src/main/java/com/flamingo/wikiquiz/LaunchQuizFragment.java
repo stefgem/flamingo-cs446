@@ -23,9 +23,16 @@ public class LaunchQuizFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_launch_quiz, container, false);
 
-        Button button = view.findViewById(R.id.launchQuizButton);
-        button.setOnClickListener(Navigation.createNavigateOnClickListener(
+        Button quizBtn = view.findViewById(R.id.launchQuizButton);
+        quizBtn.setOnClickListener(Navigation.createNavigateOnClickListener(
                 R.id.action_launchQuizFragment_to_questionFragment, null));
+
+        Button timedBtn = view.findViewById(R.id.launchTimedQuizButton);
+        // Add listener for button once timed fragment created
+
+        Button multiBtn = view.findViewById(R.id.launchMultiplayerButton);
+        multiBtn.setOnClickListener(Navigation.createNavigateOnClickListener(
+                R.id.action_launchQuizFragment_to_multiplayerFragment, null));
 
         return view;
     }

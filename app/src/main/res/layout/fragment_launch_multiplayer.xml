@@ -5,39 +5,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LaunchQuizFragment">
+    tools:context=".LaunchMultiplayerFragment">
 
     <Button
-        android:id="@+id/launchQuizButton"
+        android:id="@+id/hostSession"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Start Quiz"
+        android:text="Host a Session"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/launchTimedQuizButton"
+        android:id="@+id/joinSession"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Start Timed Quiz"
-        app:layout_constraintEnd_toEndOf="@+id/launchQuizButton"
-        app:layout_constraintStart_toStartOf="@+id/launchQuizButton"
-        app:layout_constraintTop_toBottomOf="@+id/launchQuizButton" />
-
-    <Button
-        android:id="@+id/launchMultiplayerButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Start Multiplayer"
-        app:layout_constraintEnd_toEndOf="@+id/launchTimedQuizButton"
-        app:layout_constraintStart_toStartOf="@+id/launchTimedQuizButton"
-        app:layout_constraintTop_toBottomOf="@+id/launchTimedQuizButton" />
-
+        android:text="Join a Session"
+        app:layout_constraintEnd_toEndOf="@+id/hostSession"
+        app:layout_constraintStart_toStartOf="@+id/hostSession"
+        app:layout_constraintTop_toBottomOf="@+id/hostSession" />
 </androidx.constraintlayout.widget.ConstraintLayout>
