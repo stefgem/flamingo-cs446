@@ -31,28 +31,29 @@ public class StudyAddFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
-        questionViewModel.getAllInfoBoxes()
-                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
-                    @Override
-                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
-                        // Update the cached copy of the words in the adapter.
+//        questionViewModel.getAllInfoBoxes();
+//               .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
+//                    @Override
+//                    public void onChanged(@Nullable final List<Infobox> infoboxes) {
+//                        // Update the cached copy of the words in the adapter.
+//
+//                        if(adapter != null){
+//                            adapter.setInfoboxes(infoboxes);
+//                        }
+//
+//         /*               if (textView != null) {
+//                            textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
+//                            for (Infobox infobox : infoboxes) {
+//                                String line = infobox.getRowId() + " , " + infobox.getName() + " , "
+//                                        + infobox.getCategory() + " , " + infobox.getBirthYear();
+//                                textView.append(line + "\n");
+//
+//                            }
+//
+//                        } */
+//                    }
+//                });
 
-                        if(adapter != null){
-                            adapter.setInfoboxes(infoboxes);
-                        }
-
-         /*               if (textView != null) {
-                            textView.setText("RowdID  ,  Name ,  Category  ,  BirthYear \n\n");
-                            for (Infobox infobox : infoboxes) {
-                                String line = infobox.getRowId() + " , " + infobox.getName() + " , "
-                                        + infobox.getCategory() + " , " + infobox.getBirthYear();
-                                textView.append(line + "\n");
-
-                            }
-
-                        } */
-                    }
-                });
 //        questionViewModel
 //                .getAllInfoBoxes()
 //                .observe(getViewLifecycleOwner(), new Observer<List<Infobox>>() {
@@ -89,5 +90,12 @@ public class StudyAddFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        List<Infobox> infoboxes = questionViewModel.getAllInfoBoxes();
+        adapter.setInfoboxes(infoboxes);
     }
 }
