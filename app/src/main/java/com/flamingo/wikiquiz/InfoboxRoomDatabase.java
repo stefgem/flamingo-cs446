@@ -99,15 +99,15 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
                     1965, "no".getBytes());
             _dao.insert(infobox);
 
-            populateDbSingers(_dao);
-            //populateDbActors(_dao);
-            //populateDbAthletes(_dao);
+            populateDbSingers();
+            populateDbActors();
+            populateDbAthletes();
             //infobox = new Infobox(...);
             //_dao.insert(infobox);
             return null;
         }
 
-        public void populateDbSingers(InfoboxDao _dao) {
+        private void populateDbSingers() {
             String[] singers_urls = {
                     "Michael_Jackson", "Eminem", "Lady_Gaga", "Justin_Bieber",
                     "Lil_Wayne", "Miley_Cyrus", "Rihanna", "Selena_Gomez", "Taylor_Swift",
@@ -124,7 +124,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
 
         }
 
-        public void populateDbActors(InfoboxDao _dao) {
+        private void populateDbActors() {
             String[] actor_urls = {
                     "Kim_Kardashian", "Dwayne_Johnson", "Johnny_Depp", "Angelina_Jolie",
                     "Leonardo_DiCaprio", "Mila_Kunis", "Tom_Cruise", "Arnold_Schwarzenegger",
@@ -141,7 +141,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             }
         }
 
-        public void populateDbAthletes(InfoboxDao _dao) {
+        private void populateDbAthletes() {
             String[] athlete_urls = {"Cristiano_Ronaldo", "Lionel_Messi", "Michael_Jordan",
                     "LeBron_James", "Muhammad_Ali", "Roger_Federer", "Kobe_Bryant", "O._J._Simpson",
                     "Tom_Brady", "Mike_Tyson", "Brock_Lesnar", "Shaquille_O%27Neal",
@@ -157,7 +157,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             }
         }
 
-        public Infobox fetchData(final String page, String category) {
+        private Infobox fetchData(final String page, String category) {
             String url = "https://en.wikipedia.org/wiki/" + page;
             String name = page.replace("_", " ");
             int year = 0;
@@ -167,7 +167,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
                         .execute();
                 String html = res.body();
                 Document doc2 = Jsoup.parseBodyFragment(html);
-                org.jsoup.nodes.Element body = doc2.body();
+                //org.jsoup.nodes.Element body = doc2.body();
                 String bday = doc2.select("span[class=bday]").first().text();
                 year = Integer.parseInt(bday.split("-")[0]);
             /* This code grabs the entire infobox table, stored in table.outerHtml() below
@@ -183,9 +183,8 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Infobox infobox = new Infobox(name, category,
+            return new Infobox(name, category,
                     year, "no".getBytes());
-            return infobox;
         }
     }
 }
