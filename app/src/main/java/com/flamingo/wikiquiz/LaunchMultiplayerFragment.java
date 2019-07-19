@@ -129,6 +129,9 @@ public class LaunchMultiplayerFragment extends Fragment {
                     Toast.makeText(getContext(), "Device now discoverable", Toast.LENGTH_SHORT).show();
                     mAcceptThread = new AcceptThread();
                     mAcceptThread.run();
+                    String sendMessage = "sending";
+                    byte[] send = sendMessage.getBytes();
+                    mConnectedThread.write(send);
                 } else {
                     // Device does not support bluetooth
                 }
@@ -166,7 +169,7 @@ public class LaunchMultiplayerFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.getActivity().unregisterReceiver(receiver);
+        getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
