@@ -1,5 +1,6 @@
 package com.flamingo.wikiquiz;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -8,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -56,14 +60,23 @@ public class LaunchMultiplayerFragment extends Fragment {
             }
         });
 
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 56789);
+        }
+//        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION);
+
         Button joinBtn = view.findViewById(R.id.joinSession);
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkEnableBluetooth()) {
-                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                    LaunchMultiplayerFragment.this.getActivity().registerReceiver(receiver, filter);
+                    if (adapter.isDiscovering()) {
+                        adapter.cancelDiscovery();
+                    }
                     adapter.startDiscovery();
+
+                    getActivity().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+
                     Toast.makeText(getContext(), "Began discovery", Toast.LENGTH_SHORT).show();
                     //ConnectThread connectThread = new ConnectThread()
                 }
@@ -74,6 +87,12 @@ public class LaunchMultiplayerFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.getActivity().unregisterReceiver(receiver);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
