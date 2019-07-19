@@ -36,7 +36,7 @@ public class QuestionFragment extends Fragment {
 
 
     private int questionCount = 0;
-    private int selectedAnswer = 0;
+    private int selectedAnswer = -1;
     private int correctAnswer = 0;
     private int maxQuestions = 3;
     private int currentScore = 0;
@@ -120,6 +120,7 @@ public class QuestionFragment extends Fragment {
         submitButton = view.findViewById(R.id.submitButton);
         setupAnswerButtons();
 
+        submitButton.setEnabled(false);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +130,7 @@ public class QuestionFragment extends Fragment {
                 } else {
                     gotoNextQuestion();
                     submitButton.setText(SUBMIT_STRING);
+                    submitButton.setEnabled(false);
                 }
             }
         });
@@ -214,6 +216,7 @@ public class QuestionFragment extends Fragment {
             button.getValue().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    submitButton.setEnabled(true);
                     for (final Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
                         button.getValue().getBackground().clearColorFilter();
                     }
