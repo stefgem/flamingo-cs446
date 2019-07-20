@@ -126,7 +126,7 @@ public class QuestionFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount == maxQuestions - 1) {
+                if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount < maxQuestions - 1) {
                     submitAnswer();
                     submitButton.setText(NEXT_STRING);
                 } else if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount == maxQuestions) {
