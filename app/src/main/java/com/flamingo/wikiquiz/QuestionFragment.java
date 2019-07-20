@@ -299,19 +299,20 @@ public class QuestionFragment extends Fragment {
 //                .resize(200, 200)
 //                .centerCrop()
 //                .into(personImageView);
+        if (questionContent != null && questionContent.imageBlob != null) {
+            ByteArrayInputStream bis = new ByteArrayInputStream(questionContent.imageBlob);
+            Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
+            personImageView.setImageBitmap(bp);
 
-        ByteArrayInputStream bis = new ByteArrayInputStream(questionContent.imageBlob);
-        Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
-        personImageView.setImageBitmap(bp);
+            questionTextView.setText(questionContent.questionString);
+            questionCountView.setText("Question " + (currentQuestionCount + 1) + " of " + NUM_TOTAL_QUESTIONS + "  |");
+            correctAnswer = questionContent.correctAnswer;
 
-        questionTextView.setText(questionContent.questionString);
-        questionCountView.setText("Question " + (currentQuestionCount + 1) + " of " + NUM_TOTAL_QUESTIONS + "  |");
-        correctAnswer = questionContent.correctAnswer;
-
-        ArrayList<String> answers = questionContent.answers;
-        if (answers != null) {
-            for (int i = 0; i < answers.size(); i++) {
-                answerButtons.get(i).setText(answers.get(i));
+            ArrayList<String> answers = questionContent.answers;
+            if (answers != null) {
+                for (int i = 0; i < answers.size(); i++) {
+                    answerButtons.get(i).setText(answers.get(i));
+                }
             }
         }
     }
