@@ -1,6 +1,8 @@
 package com.flamingo.wikiquiz;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -10,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.squareup.picasso.Picasso;
-
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.Random;
 public class QuestionFragment extends Fragment {
 
 
-    private static final int NUM_TOTAL_QUESTIONS = 5; // TODO change this when done w/ debug test
+    private static final int NUM_TOTAL_QUESTIONS = 10; // TODO change this when done w/ debug test
     private static final int CORRECT_ANSWER_POINTS_VALUE = 100;
     private static final String SUBMIT_STRING = "Submit Answer";
     private static final String NEXT_STRING = "Next Question";
@@ -293,12 +293,16 @@ public class QuestionFragment extends Fragment {
     private void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + currentQuestionCount);
 
-        Picasso.get()
-                //.load(questionContent.imagePath)
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
-                .resize(200, 200)
-                .centerCrop()
-                .into(personImageView);
+//        Picasso.get()
+//                //.load(questionContent.imagePath)
+//                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
+//                .resize(200, 200)
+//                .centerCrop()
+//                .into(personImageView);
+
+        ByteArrayInputStream bis = new ByteArrayInputStream(questionContent.imageBlob);
+        Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
+        personImageView.setImageBitmap(bp);
 
         questionTextView.setText(questionContent.questionString);
         questionCountView.setText("Question " + (currentQuestionCount + 1) + " of " + NUM_TOTAL_QUESTIONS + "  |");

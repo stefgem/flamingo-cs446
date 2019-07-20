@@ -84,25 +84,25 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             // TODO hardcoded infoboxes go here
             // example insertion of 1 row - image blob is just a random byteArray for now
             // TODO make imageBlob actually be real
-            infobox = new Infobox("Nikola Tesla", "Science & Math",
-                    1856, "no".getBytes());
-            _dao.insert(infobox);
-            infobox = new Infobox("Alan Turing", "Science & Math", 1912, "no".getBytes());
-            _dao.insert(infobox);
-            infobox = new Infobox("Isaac Newton", "Science & Math", 1643, "no".getBytes());
-            _dao.insert(infobox);
-            infobox = new Infobox("Marie Curie", "Science & Math", 1867, "no".getBytes());
-            _dao.insert(infobox);
-            infobox = new Infobox("Albert Einstein", "Science & Math", 1879, "no".getBytes());
-            _dao.insert(infobox);
-
-            infobox = new Infobox("Elizabeth II", "Politics",
-                    1926, "no".getBytes());
-            _dao.insert(infobox);
-
-            infobox = new Infobox("Robert Downey Jr.", "TV & Film",
-                    1965, "no".getBytes());
-            _dao.insert(infobox);
+//            infobox = new Infobox("Nikola Tesla", "Science & Math",
+//                    1856, "no".getBytes());
+//            _dao.insert(infobox);
+//            infobox = new Infobox("Alan Turing", "Science & Math", 1912, "no".getBytes());
+//            _dao.insert(infobox);
+//            infobox = new Infobox("Isaac Newton", "Science & Math", 1643, "no".getBytes());
+//            _dao.insert(infobox);
+//            infobox = new Infobox("Marie Curie", "Science & Math", 1867, "no".getBytes());
+//            _dao.insert(infobox);
+//            infobox = new Infobox("Albert Einstein", "Science & Math", 1879, "no".getBytes());
+//            _dao.insert(infobox);
+//
+//            infobox = new Infobox("Elizabeth II", "Politics",
+//                    1926, "no".getBytes());
+//            _dao.insert(infobox);
+//
+//            infobox = new Infobox("Robert Downey Jr.", "TV & Film",
+//                    1965, "no".getBytes());
+//            _dao.insert(infobox);
 
             populateDbSingers();
             populateDbActors();

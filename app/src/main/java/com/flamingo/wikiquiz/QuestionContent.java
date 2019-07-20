@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class
 QuestionContent {
-    public String imagePath;
+    public byte[] imageBlob;
     public String questionString;
     public ArrayList<String> answers;
     public int correctAnswer;
