@@ -105,8 +105,8 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             _dao.insert(infobox);
 
             populateDbSingers();
-            //populateDbActors();
-            //populateDbAthletes();
+            populateDbActors();
+            populateDbAthletes();
             //infobox = new Infobox(...);
             //_dao.insert(infobox);
             return null;
@@ -125,7 +125,6 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             for (String url: singers_urls) {
                 Infobox infobox = fetchData(url, "Singers");
                 _dao.insert(infobox);
-                break;
             }
 
         }
