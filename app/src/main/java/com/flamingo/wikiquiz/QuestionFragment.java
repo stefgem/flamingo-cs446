@@ -109,7 +109,7 @@ public class QuestionFragment extends Fragment {
                 if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount < NUM_TOTAL_QUESTIONS - 1) {
                     submitAnswer();
                     submitButton.setText(NEXT_STRING);
-                } else if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount == maxQuestions) {
+                } else if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount == NUM_TOTAL_QUESTIONS) {
                     submitAnswer();
                     submitButton.setText(LAST_STRING);
                 } else {
