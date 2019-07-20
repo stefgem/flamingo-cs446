@@ -30,7 +30,7 @@ import java.util.Random;
 public class QuestionFragment extends Fragment {
 
 
-    private static final int NUM_TOTAL_QUESTIONS = 10; // TODO change this when done w/ debug test
+    private static final int NUM_TOTAL_QUESTIONS = 3; // TODO change this when done w/ debug test
     private static final int CORRECT_ANSWER_POINTS_VALUE = 100;
     private static final String SUBMIT_STRING = "Submit Answer";
     private static final String NEXT_STRING = "Next Question";
@@ -108,7 +108,7 @@ public class QuestionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (((Button) v).getText().equals(SUBMIT_STRING)
-                        && currentQuestionCount < NUM_TOTAL_QUESTIONS - 1) {
+                        && currentQuestionCount < NUM_TOTAL_QUESTIONS) {
                     submitAnswer();
                     submitButton.setText(NEXT_STRING);
                 } else if (((Button) v).getText().equals(SUBMIT_STRING)
@@ -225,7 +225,7 @@ public class QuestionFragment extends Fragment {
     }
 
     private void advanceProgressBar() {
-        float percent = (float) (currentQuestionCount + 1) / ((float) NUM_TOTAL_QUESTIONS);
+        float percent = (float) (currentQuestionCount) / ((float) NUM_TOTAL_QUESTIONS);
         if (percent == 1.0) {
             ((ConstraintLayout.LayoutParams) progressBar.
                     getLayoutParams()).matchConstraintPercentWidth = (float) (0.9999999);
@@ -267,28 +267,6 @@ public class QuestionFragment extends Fragment {
             });
         }
     }
-
-//        if (currentQuestionCount%2 == 0) {
-//            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
-//            qc.questionString = "What is this person's name?";
-//            qc.answers = new ArrayList<>();
-//            qc.answers.add("Harry Houdini");
-//            qc.answers.add("Salvador Dali");
-//            qc.answers.add("Charlie Chaplin");
-//            qc.answers.add("Nikola Tesla");
-//            qc.correctAnswer = 3;
-//        }
-//        else {
-//            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg";
-//            qc.questionString = "What is this person's Date?";
-//            qc.answers = new ArrayList<>();
-//            qc.answers.add("Alice");
-//            qc.answers.add("Bob");
-//            qc.answers.add("Eve");
-//            qc.answers.add("Mellisa");
-//            qc.correctAnswer = 2;
-//        } return qc;
-//    }
 
     private void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + currentQuestionCount);
