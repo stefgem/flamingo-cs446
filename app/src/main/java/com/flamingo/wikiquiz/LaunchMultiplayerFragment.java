@@ -396,9 +396,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                 mmOutStream.write(bytes);
 
                 // Share the sent message with the UI activity.
-                Message writtenMsg = handler.obtainMessage(
-                        MESSAGE_WRITE, -1, -1, mmBuffer);
-                writtenMsg.sendToTarget();
+                handler.obtainMessage(MESSAGE_WRITE, -1, -1, bytes).sendToTarget();
             } catch (IOException e) {
                 Log.e("ConnectedThread", "Error occurred when sending data", e);
 
