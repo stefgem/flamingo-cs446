@@ -17,11 +17,13 @@ public class QuestionViewModel extends AndroidViewModel {
     private List<Infobox> _allInfoBoxes;
     private List<Infobox> _infoboxesInCategory;
     private int numberOfQuestionTypes = 2;
+    private List<QuestionContent> _preloadedQuestionContentList;
 
     public QuestionViewModel(@NonNull Application application) {
         super(application);
         _repository = new InfoboxRepository(application);
         _allInfoBoxes = _repository.getAllInfoboxes();
+        _preloadedQuestionContentList = new ArrayList<QuestionContent>();
     }
 
     List<Infobox> getAllInfoBoxes() {
@@ -32,33 +34,11 @@ public class QuestionViewModel extends AndroidViewModel {
         return _repository.getInfoboxesInCategory(category);
     }
 
-    public void insert(Infobox infobox) {
-        _repository.insert(infobox);
-    }
-
-    public void deleteAllDatabaseRows() {
-        _repository.deleteAll();
-    }
-
-    @Nullable // if the id doesn't match an entry, this method will return null
-    public Infobox getInfoboxById(int id) {
-
-        return _repository.getInfoboxById(id);
-
-    }
-
-    public LiveData<List<Integer>> getInfoboxIdList() {
-        return _repository.getInfoboxIdList();
-    }
-
-
     public QuestionContent getQuestionContent() {
-
         int infoBoxSize = _allInfoBoxes.size();
 
         QuestionContent qc = new QuestionContent();
         int chooseQuestion = new Random().nextInt(numberOfQuestionTypes);
-
 
         if (infoBoxSize != 0) {
             if (chooseQuestion == 0) {
@@ -109,6 +89,54 @@ public class QuestionViewModel extends AndroidViewModel {
                     }
                 }
             }
-        } return qc;
+        }
+        return qc;
     }
+
+    public void generatePreloadedQCs(int numWanted) {
+        _preloadedQuestionContentList.clear();
+
+        for (int i = 0; i < numWanted; i++) {
+            QuestionContent questionContent = getQuestionContent();
+            _preloadedQuestionContentList.add(questionContent);
+        }
+    }
+
+    public List<QuestionContent> getAllPreloadedQCs() {
+        return _preloadedQuestionContentList;
+    }
+
+    public QuestionContent getPreloadedAtIndex(int index) {
+        if (_preloadedQuestionContentList.size() <= index) {
+            return null;
+        } else return _preloadedQuestionContentList.get(index);
+    }
+
+    public void setAllPreloadedQCs(List<QuestionContent> preloadedQCs) {
+        _preloadedQuestionContentList.clear();
+        _preloadedQuestionContentList = new ArrayList<>(preloadedQCs);
+    }
+
+
+    // seemingly unneeded stuff below
+
+    public void insert(Infobox infobox) {
+        _repository.insert(infobox);
+    }
+
+    public void deleteAllDatabaseRows() {
+        _repository.deleteAll();
+    }
+
+    @Nullable // if the id doesn't match an entry, this method will return null
+    public Infobox getInfoboxById(int id) {
+
+        return _repository.getInfoboxById(id);
+
+    }
+
+    public LiveData<List<Integer>> getInfoboxIdList() {
+        return _repository.getInfoboxIdList();
+    }
+
 }

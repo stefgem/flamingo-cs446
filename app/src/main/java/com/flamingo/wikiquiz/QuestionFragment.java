@@ -29,13 +29,13 @@ import java.util.Random;
 public class QuestionFragment extends Fragment {
 
 
-    private static final int NUM_TOTAL_QUESTIONS = 3;
+    private static final int NUM_TOTAL_QUESTIONS = 1; // TODO change this when done w/ debug test
     private static final int CORRECT_ANSWER_POINTS_VALUE = 100;
     private static final String SUBMIT_STRING = "Submit Answer";
     private static final String NEXT_STRING = "Next Question";
     private static final String LAST_STRING = "Done";
 
-    private int questionCount = 0;
+    private int currentQuestionCount = 0;
     private int selectedAnswer = -1;
     private int correctAnswer = 0;
     private int currentScore = 0;
@@ -106,10 +106,12 @@ public class QuestionFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount < NUM_TOTAL_QUESTIONS - 1) {
+                if (((Button) v).getText().equals(SUBMIT_STRING)
+                        && currentQuestionCount < NUM_TOTAL_QUESTIONS - 1) {
                     submitAnswer();
                     submitButton.setText(NEXT_STRING);
-                } else if (((Button) v).getText().equals(SUBMIT_STRING) && questionCount == NUM_TOTAL_QUESTIONS) {
+                } else if (((Button) v).getText().equals(SUBMIT_STRING)
+                        && currentQuestionCount == NUM_TOTAL_QUESTIONS) {
                     submitAnswer();
                     submitButton.setText(LAST_STRING);
                 } else {
@@ -121,8 +123,29 @@ public class QuestionFragment extends Fragment {
         });
         questionTextView = view.findViewById(R.id.QuizQuestionTextView);
 
-
         infoboxesList = questionViewModel.getAllInfoBoxes();
+
+        questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+
+        // TODO check if there is a bluetooth connection - if so, set preloaded to match the host
+        //  use questionViewModel.setAllPreloadedQCs(....);
+
+
+        // START OF DEBUG TEST
+        QuestionContent testQC = new QuestionContent();
+        testQC.questionString = "Is setting the preloaded array working?";
+        testQC.answers = new ArrayList<>();
+        testQC.answers.add("Yes");
+        testQC.answers.add("Also Yes");
+        testQC.answers.add("Definitely");
+        testQC.answers.add("For sure");
+        testQC.correctAnswer = 2;
+
+        ArrayList<QuestionContent> testQCList = new ArrayList<>();
+        testQCList.add(testQC);
+
+        questionViewModel.setAllPreloadedQCs(testQCList);
+        // END OF DEBUG TEST
 
         gotoNextQuestion();
 
@@ -164,9 +187,11 @@ public class QuestionFragment extends Fragment {
         skipButton.setEnabled(false);
         for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
             if (button.getKey() == correctAnswer) {
-                button.getValue().getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+                button.getValue().getBackground()
+                        .setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
             } else {
-                button.getValue().getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+                button.getValue().getBackground()
+                        .setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
             }
         }
     }
@@ -176,20 +201,24 @@ public class QuestionFragment extends Fragment {
         usedHint = false;
         hintButton.setEnabled(true);
         skipButton.setEnabled(true);
-        if (questionCount < NUM_TOTAL_QUESTIONS) {
-            float percent = (float) questionCount / (float) NUM_TOTAL_QUESTIONS;
-            ((ConstraintLayout.LayoutParams) progressBar.getLayoutParams()).matchConstraintPercentWidth = percent;
+        if (currentQuestionCount < NUM_TOTAL_QUESTIONS) {
+            float percent = (float) currentQuestionCount / (float) NUM_TOTAL_QUESTIONS;
+            ((ConstraintLayout.LayoutParams) progressBar
+                    .getLayoutParams()).matchConstraintPercentWidth = percent;
             progressBar.requestLayout();
             for (int i = 0; i < answerButtons.size(); i++) {
                 answerButtons.get(i).getBackground().clearColorFilter();
             }
-            QuestionContent questionContent = questionViewModel.getQuestionContent();
+            //QuestionContent questionContent = questionViewModel.getQuestionContent();
+            QuestionContent questionContent =
+                    questionViewModel.getPreloadedAtIndex(currentQuestionCount);
             populateQuestion(questionContent);
-            questionCount++;
+            currentQuestionCount++;
         } else {
             Bundle bundle = new Bundle();
             bundle.putInt("score", currentScore);
-            NavHostFragment.findNavController(this).navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
         }
     }
 
@@ -225,7 +254,7 @@ public class QuestionFragment extends Fragment {
         }
     }
 
-//        if (questionCount%2 == 0) {
+//        if (currentQuestionCount%2 == 0) {
 //            qc.imagePath = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/N.Tesla.JPG/800px-N.Tesla.JPG";
 //            qc.questionString = "What is this person's name?";
 //            qc.answers = new ArrayList<>();
@@ -248,7 +277,7 @@ public class QuestionFragment extends Fragment {
 //    }
 
     public void populateQuestion(QuestionContent questionContent) {
-        Log.e("Question: ", "" + questionCount);
+        Log.e("Question: ", "" + currentQuestionCount);
 
         Picasso.get()
                 //.load(questionContent.imagePath)
