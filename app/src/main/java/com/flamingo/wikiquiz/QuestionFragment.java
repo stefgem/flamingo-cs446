@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import java.util.Random;
 public class QuestionFragment extends Fragment {
 
 
-    private static final int NUM_TOTAL_QUESTIONS = 1; // TODO change this when done w/ debug test
+    private static final int NUM_TOTAL_QUESTIONS = 5; // TODO change this when done w/ debug test
     private static final int CORRECT_ANSWER_POINTS_VALUE = 100;
     private static final String SUBMIT_STRING = "Submit Answer";
     private static final String NEXT_STRING = "Next Question";
@@ -44,7 +45,7 @@ public class QuestionFragment extends Fragment {
     private ImageView personImageView;
     private Button submitButton, hintButton, skipButton;
     private HashMap<Integer, Button> answerButtons;
-    private TextView questionTextView;
+    private TextView questionTextView, questionCountView, scoreCountView;
     private View progressBar;
 
     private Toast toast;
@@ -122,6 +123,8 @@ public class QuestionFragment extends Fragment {
             }
         });
         questionTextView = view.findViewById(R.id.QuizQuestionTextView);
+        questionCountView = view.findViewById(R.id.questionCountView);
+        scoreCountView = view.findViewById(R.id.scoreCountView);
 
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
@@ -132,19 +135,19 @@ public class QuestionFragment extends Fragment {
 
 
         // START OF DEBUG TEST
-        QuestionContent testQC = new QuestionContent();
-        testQC.questionString = "Is setting the preloaded array working?";
-        testQC.answers = new ArrayList<>();
-        testQC.answers.add("Yes");
-        testQC.answers.add("Also Yes");
-        testQC.answers.add("Definitely");
-        testQC.answers.add("For sure");
-        testQC.correctAnswer = 2;
-
-        ArrayList<QuestionContent> testQCList = new ArrayList<>();
-        testQCList.add(testQC);
-
-        questionViewModel.setAllPreloadedQCs(testQCList);
+//        QuestionContent testQC = new QuestionContent();
+//        testQC.questionString = "Is setting the preloaded array working?";
+//        testQC.answers = new ArrayList<>();
+//        testQC.answers.add("Yes");
+//        testQC.answers.add("Also Yes");
+//        testQC.answers.add("Definitely");
+//        testQC.answers.add("For sure");
+//        testQC.correctAnswer = 2;
+//
+//        ArrayList<QuestionContent> testQCList = new ArrayList<>();
+//        testQCList.add(testQC);
+//
+//        questionViewModel.setAllPreloadedQCs(testQCList);
         // END OF DEBUG TEST
 
         gotoNextQuestion();
@@ -152,19 +155,19 @@ public class QuestionFragment extends Fragment {
         return view;
     }
 
-    public void enableAnswerButtons() {
+    private void enableAnswerButtons() {
         for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
             button.getValue().setEnabled(true);
         }
     }
 
-    public void disableAnswerButtons() {
+    private void disableAnswerButtons() {
         for (Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
             button.getValue().setEnabled(false);
         }
     }
 
-    public void submitAnswer() {
+    private void submitAnswer() {
         String toastString;
 
         if (selectedAnswer == correctAnswer) {
@@ -173,8 +176,8 @@ public class QuestionFragment extends Fragment {
             } else {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE;
             }
+            scoreCountView.setText("Score: " + currentScore);
             toastString = "Correct!";
-
         } else {
             toastString = "Incorrect.";
         }
@@ -196,16 +199,15 @@ public class QuestionFragment extends Fragment {
         }
     }
 
-    public void gotoNextQuestion() {
+    private void gotoNextQuestion() {
         enableAnswerButtons();
         usedHint = false;
         hintButton.setEnabled(true);
         skipButton.setEnabled(true);
         if (currentQuestionCount < NUM_TOTAL_QUESTIONS) {
-            float percent = (float) currentQuestionCount / (float) NUM_TOTAL_QUESTIONS;
-            ((ConstraintLayout.LayoutParams) progressBar
-                    .getLayoutParams()).matchConstraintPercentWidth = percent;
-            progressBar.requestLayout();
+
+            advanceProgressBar();
+
             for (int i = 0; i < answerButtons.size(); i++) {
                 answerButtons.get(i).getBackground().clearColorFilter();
             }
@@ -222,7 +224,19 @@ public class QuestionFragment extends Fragment {
         }
     }
 
-    public void applyHint() {
+    private void advanceProgressBar() {
+        float percent = (float) (currentQuestionCount + 1) / ((float) NUM_TOTAL_QUESTIONS);
+        if (percent == 1.0) {
+            ((ConstraintLayout.LayoutParams) progressBar.
+                    getLayoutParams()).matchConstraintPercentWidth = (float) (0.9999999);
+        } else {
+            ((ConstraintLayout.LayoutParams) progressBar
+                    .getLayoutParams()).matchConstraintPercentWidth = percent;
+        }
+        progressBar.requestLayout();
+    }
+
+    private void applyHint() {
         int total = 0;
         int firstRandom = -1;
         while (total != 2) {
@@ -238,7 +252,7 @@ public class QuestionFragment extends Fragment {
         usedHint = true;
     }
 
-    public void setupAnswerButtons() {
+    private void setupAnswerButtons() {
         for (final Map.Entry<Integer, Button> button : answerButtons.entrySet()) {
             button.getValue().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -276,7 +290,7 @@ public class QuestionFragment extends Fragment {
 //        } return qc;
 //    }
 
-    public void populateQuestion(QuestionContent questionContent) {
+    private void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + currentQuestionCount);
 
         Picasso.get()
@@ -287,6 +301,7 @@ public class QuestionFragment extends Fragment {
                 .into(personImageView);
 
         questionTextView.setText(questionContent.questionString);
+        questionCountView.setText("Question " + (currentQuestionCount + 1) + " of " + NUM_TOTAL_QUESTIONS + "  |");
         correctAnswer = questionContent.correctAnswer;
 
         ArrayList<String> answers = questionContent.answers;

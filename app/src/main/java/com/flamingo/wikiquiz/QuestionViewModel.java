@@ -68,7 +68,7 @@ public class QuestionViewModel extends AndroidViewModel {
                 int questionInfoboxIndex = new Random().nextInt(infoBoxSize);
                 Infobox questionInfobox = _allInfoBoxes.get(questionInfoboxIndex);
                 qc.imagePath = "";
-                qc.questionString = "What year was this person born?";
+                qc.questionString = "In what year was this person born?";
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
                 qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
