@@ -45,53 +45,51 @@ public class StatsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_stats, container, false);
         result = (WebView) view.findViewById(R.id.result);
-        //result = (TextView) view.findViewById(R.id.result);
         getBtn = (Button) view.findViewById(R.id.getBtn);
         getBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Button Click", "Entering button click event");
-                System.out.println("Entering button click event");
-                getWebsite();
+               // getWebsite();
             }
         });
         return view;
     }
 
-    private void getWebsite() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final StringBuilder builder = new StringBuilder();
 
-                try {
-                    Connection.Response res
-                            = Jsoup.connect("https://en.wikipedia.org/wiki/Linus_Torvalds")
-                            .execute();
-                    String html = res.body();
-                    Document doc2 = Jsoup.parseBodyFragment(html);
-                    Element body = doc2.body();
-                    Elements tables = body.getElementsByTag("table");
-                    for (Element table : tables) {
-                        if (table.className().contains("infobox") == true) {
-                            System.out.println(table.outerHtml());
-                            builder.append(table.outerHtml());
-                            break;
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                getParentFragment().getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        result.loadDataWithBaseURL(null, builder.toString(),
-                                "text/html", "utf-8", null);
-                    }
-                });
-            }
-        }).start();
-    }
+//    private void getWebsite() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                final StringBuilder builder = new StringBuilder();
+//
+//                try {
+//                    Connection.Response res
+//                            = Jsoup.connect("https://en.wikipedia.org/wiki/Linus_Torvalds")
+//                            .execute();
+//                    String html = res.body();
+//                    Document doc2 = Jsoup.parseBodyFragment(html);
+//                    Element body = doc2.body();
+//                    Elements tables = body.getElementsByTag("table");
+//                    for (Element table : tables) {
+//                        if (table.className().contains("infobox") == true) {
+//                            System.out.println(table.outerHtml());
+//                            builder.append(table.outerHtml());
+//                            break;
+//                        }
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                getParentFragment().getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        result.loadDataWithBaseURL(null, builder.toString(),
+//                                "text/html", "utf-8", null);
+//                    }
+//                });
+//            }
+//        }).start();
+//    }
 
 }

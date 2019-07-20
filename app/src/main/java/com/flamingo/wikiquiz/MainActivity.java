@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavView, navController);
     }
 
-
     // ensure that selecting a bottom nav icon is handled by the NavController
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
