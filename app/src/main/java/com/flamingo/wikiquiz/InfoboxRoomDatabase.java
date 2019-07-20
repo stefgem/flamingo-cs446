@@ -12,8 +12,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 @Database(entities = {Infobox.class}, version = 1, exportSchema = false)
 public abstract class InfoboxRoomDatabase extends RoomDatabase {
@@ -51,14 +56,14 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
 
                     // decided put Populate call in onOpen instead for now
                     // ideally would be here, we would do initial populating of the DB only once
-                     new PopulateDbAsync(INSTANCE).execute();
+                    new PopulateDbAsync(INSTANCE).execute();
                 }
 
                 // this gets called every time the DB is opened
                 @Override
                 public void onOpen(@NonNull SupportSQLiteDatabase db) {
                     super.onOpen(db);
-                    // new PopulateDbAsync(INSTANCE).execute();
+                    //new PopulateDbAsync(INSTANCE).execute();
                 }
             };
 
@@ -72,7 +77,7 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
-           // _dao.deleteAll();  // this is only useful if calling Populate from an onOpen call
+            //_dao.deleteAll();  // this is only useful if calling Populate from an onOpen call
 
             Infobox infobox;
 
@@ -161,30 +166,47 @@ public abstract class InfoboxRoomDatabase extends RoomDatabase {
             String url = "https://en.wikipedia.org/wiki/" + page;
             String name = page.replace("_", " ");
             int year = 0;
+            byte[] imageBlob = new byte[4096];
             try {
                 Connection.Response res
                         = Jsoup.connect(url)
                         .execute();
                 String html = res.body();
+                html = html.substring(0, html.length() / 2);
                 Document doc2 = Jsoup.parseBodyFragment(html);
-                //org.jsoup.nodes.Element body = doc2.body();
-                String bday = doc2.select("span[class=bday]").first().text();
-                year = Integer.parseInt(bday.split("-")[0]);
-            /* This code grabs the entire infobox table, stored in table.outerHtml() below
-            Element body = doc2.body();
-            Elements tables = body.getElementsByTag("table");
-            for (Element table : tables) {
-                if (table.className().contains("infobox") == true) {
-                    System.out.println(table.outerHtml());
-                    builder.append(table.outerHtml());
-                    break;
+
+                Element body = doc2.body();
+                Elements tables = body.getElementsByTag("table");
+                String imageUrl = "";
+                for (Element table : tables) {
+                    if (table.className().contains("infobox")) {
+                        String bday = table.select("span[class=bday]").first().text();
+                        year = Integer.parseInt(bday.split("-")[0]);
+
+                        Element imageElement = table.select("img").first();
+                        imageUrl = "https:" + imageElement.attr("src");
+                        //System.out.println(table.outerHtml());
+                        //builder.append(table.outerHtml());
+                        break;
+                    }
                 }
-            }*/
+
+
+                // The following downloads images into a byte[]
+                URL urlImage = new URL(imageUrl);
+                InputStream in = urlImage.openStream();
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int n = -1;
+                while ((n = in.read(imageBlob)) > 0) {
+                    baos.write(imageBlob, 0, n);
+                }
+                imageBlob = baos.toByteArray();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return new Infobox(name, category,
-                    year, "no".getBytes());
+                    year, imageBlob);
         }
     }
 }
