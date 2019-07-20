@@ -1,43 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LaunchQuizFragment">
 
+    <!--  <View
+         android:id="@+id/horizLine1"
+         android:layout_width="match_parent"
+         android:layout_height="2dp"
+         android:layout_marginTop="8dp"
+         android:background="@android:color/black"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@id/launchGuideline1" /> -->
+
+    <TextView
+        android:id="@+id/titleQuizSP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Solo Quiz Session"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/launchGuideline1" />
+
+    <TextView
+        android:id="@+id/descripQuizSP"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/description_quiz_SP"
+
+        app:layout_constraintEnd_toStartOf="@+id/launchQuizButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleQuizSP" />
+
+    <View
+        android:id="@+id/horizLine2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/launchGuideline2" />
+
+    <TextView
+        android:id="@+id/titleQuizMP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Bluetooth Quiz Session"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/launchGuideline3" />
+
+    <View
+        android:id="@+id/horizLine3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/launchGuideline3" />
+
+    <TextView
+        android:id="@+id/titleLoadDB"
+        android:layout_width="224dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Load Wikipedia Data"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/launchGuideline2" />
+
+    <TextView
+        android:id="@+id/descripQuizMP"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/description_quiz_MP"
+        app:layout_constraintEnd_toStartOf="@+id/launchMultiplayerButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleQuizMP" />
+
+    <TextView
+        android:id="@+id/descripLoadDB"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/description_load_wikipedia_data"
+        app:layout_constraintEnd_toStartOf="@+id/launchTimedQuizButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleLoadDB" />
+
+
     <Button
         android:id="@+id/launchQuizButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:text="Start Quiz"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Start Solo Quiz"
+        app:layout_constraintBottom_toTopOf="@+id/horizLine3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/launchGuideline1" />
 
     <Button
         android:id="@+id/launchTimedQuizButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Start Timed Quiz"
-        app:layout_constraintEnd_toEndOf="@+id/launchQuizButton"
-        app:layout_constraintStart_toStartOf="@+id/launchQuizButton"
-        app:layout_constraintTop_toBottomOf="@+id/launchQuizButton" />
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Load Data"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/launchGuideline2" />
 
     <Button
         android:id="@+id/launchMultiplayerButton"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Start Multiplayer"
-        app:layout_constraintEnd_toEndOf="@+id/launchTimedQuizButton"
-        app:layout_constraintStart_toStartOf="@+id/launchTimedQuizButton"
-        app:layout_constraintTop_toBottomOf="@+id/launchTimedQuizButton" />
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Begin Set-up"
+        app:layout_constraintBottom_toTopOf="@+id/horizLine2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/launchGuideline3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/launchGuideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.06" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/launchGuideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.67" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/launchGuideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.36" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
