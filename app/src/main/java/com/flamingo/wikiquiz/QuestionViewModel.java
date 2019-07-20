@@ -1,15 +1,16 @@
 package com.flamingo.wikiquiz;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class QuestionViewModel extends AndroidViewModel {
 
@@ -44,7 +45,7 @@ public class QuestionViewModel extends AndroidViewModel {
             if (chooseQuestion == 0) {
                 int questionInfoboxIndex = new Random().nextInt(infoBoxSize);
                 Infobox questionInfobox = _allInfoBoxes.get(questionInfoboxIndex);
-                qc.imagePath = "";
+                qc.imageBlob = questionInfobox.getImageBlob();
                 qc.questionString = "What is this person's name?";
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
@@ -67,7 +68,7 @@ public class QuestionViewModel extends AndroidViewModel {
             } else {
                 int questionInfoboxIndex = new Random().nextInt(infoBoxSize);
                 Infobox questionInfobox = _allInfoBoxes.get(questionInfoboxIndex);
-                qc.imagePath = "";
+                qc.imageBlob = questionInfobox.getImageBlob();
                 qc.questionString = "What year was this person born?";
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);

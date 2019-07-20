@@ -1,6 +1,8 @@
 package com.flamingo.wikiquiz;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -18,8 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.squareup.picasso.Picasso;
-
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.Random;
 public class QuestionFragment extends Fragment {
 
 
-    private static final int NUM_TOTAL_QUESTIONS = 1; // TODO change this when done w/ debug test
+    private static final int NUM_TOTAL_QUESTIONS = 10; // TODO change this when done w/ debug test
     private static final int CORRECT_ANSWER_POINTS_VALUE = 100;
     private static final String SUBMIT_STRING = "Submit Answer";
     private static final String NEXT_STRING = "Next Question";
@@ -132,19 +133,19 @@ public class QuestionFragment extends Fragment {
 
 
         // START OF DEBUG TEST
-        QuestionContent testQC = new QuestionContent();
-        testQC.questionString = "Is setting the preloaded array working?";
-        testQC.answers = new ArrayList<>();
-        testQC.answers.add("Yes");
-        testQC.answers.add("Also Yes");
-        testQC.answers.add("Definitely");
-        testQC.answers.add("For sure");
-        testQC.correctAnswer = 2;
-
-        ArrayList<QuestionContent> testQCList = new ArrayList<>();
-        testQCList.add(testQC);
-
-        questionViewModel.setAllPreloadedQCs(testQCList);
+//        QuestionContent testQC = new QuestionContent();
+//        testQC.questionString = "Is setting the preloaded array working?";
+//        testQC.answers = new ArrayList<>();
+//        testQC.answers.add("Yes");
+//        testQC.answers.add("Also Yes");
+//        testQC.answers.add("Definitely");
+//        testQC.answers.add("For sure");
+//        testQC.correctAnswer = 2;
+//
+//        ArrayList<QuestionContent> testQCList = new ArrayList<>();
+//        testQCList.add(testQC);
+//
+//        questionViewModel.setAllPreloadedQCs(testQCList);
         // END OF DEBUG TEST
 
         gotoNextQuestion();
@@ -279,12 +280,16 @@ public class QuestionFragment extends Fragment {
     public void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + currentQuestionCount);
 
-        Picasso.get()
-                //.load(questionContent.imagePath)
-                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
-                .resize(200, 200)
-                .centerCrop()
-                .into(personImageView);
+//        Picasso.get()
+//                //.load(questionContent.imagePath)
+//                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
+//                .resize(200, 200)
+//                .centerCrop()
+//                .into(personImageView);
+
+        ByteArrayInputStream bis = new ByteArrayInputStream(questionContent.imageBlob);
+        Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
+        personImageView.setImageBitmap(bp);
 
         questionTextView.setText(questionContent.questionString);
         correctAnswer = questionContent.correctAnswer;
