@@ -1,7 +1,6 @@
 package com.flamingo.wikiquiz;
 
 import android.app.Application;
-import android.icu.text.IDNA;
 import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
@@ -17,8 +16,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class InfoboxRepository {
 
@@ -130,7 +129,18 @@ public class InfoboxRepository {
 
     private Infobox fetchData(final String page, String category) {
         String url = "https://en.wikipedia.org/wiki/" + page;
-        String name = page.replace("_", " ");
+        String nameDecoded = "";
+        try {
+            nameDecoded = URLDecoder.decode(page.replace("_", " "), "utf-8");
+        } catch (Exception e) {
+            // Do nothing
+        }
+        String name = nameDecoded;
+        if (nameDecoded.contains("(")) {
+            String test = " \\(";
+            String[] noBrackets = nameDecoded.split(test, 0);
+            name = noBrackets[0];
+        }
         int year = 0;
         byte[] imageBlob = new byte[4096];
         try {
