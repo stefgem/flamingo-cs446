@@ -4,7 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="description_quiz_SP">Single-player quiz session. Try to answer as many questions as you can correctly!
-        Requires that Wikipedia data has been loaded .</string>
+        Requires that Wikipedia data has been loaded.</string>
     <string name="description_quiz_MP">Host a bluetooth quiz session, or join a hosted session.
         Hosting requires that Wikipedia data has been loaded.</string>
     <string name="description_load_wikipedia_data">Load quiz data from Wikipedia. Once this data has been downloaded, quizzes can be played offline.</string>

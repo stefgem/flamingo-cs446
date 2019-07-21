@@ -6,32 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".StudyAddFragment">
 
+    <include
+        android:id="@+id/display_header"
+        layout="@layout/review_db_display_header"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/database_recyclerview"
+        app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/database_recyclerview"
+        app:layout_constraintTop_toBottomOf="@id/review_title" />
+
+
+    <View
+        android:id="@+id/db_display_horizLine2"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/display_header"
+        app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/database_recyclerview" />
+
+    <View
+        android:id="@+id/db_display_horizLine2"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/database_recyclerview"
+        app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/database_recyclerview" />
+
+    <View
+        android:id="@+id/hdb_display_horizLine3"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/database_recyclerview"
+        app:layout_constraintTop_toBottomOf="@+id/database_recyclerview" />
+
     <TextView
-        android:id="@+id/database_title"
+        android:id="@+id/review_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="DATABASE"
+        android:text="Review"
+        android:textSize="32sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/display_header"
         app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
         app:layout_constraintStart_toStartOf="@+id/database_recyclerview"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/database_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="64dp"
         android:background="@android:color/holo_orange_light"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/database_title" />
+        app:layout_constraintTop_toBottomOf="@id/display_header" />
 
     <!--         app:layout_constraintBottom_toTopOf="@+id/new_entry" -->
     <!--

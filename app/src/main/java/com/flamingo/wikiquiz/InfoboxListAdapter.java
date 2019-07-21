@@ -1,36 +1,46 @@
 package com.flamingo.wikiquiz;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 public class InfoboxListAdapter extends RecyclerView.Adapter<InfoboxListAdapter.InfoboxViewHolder> {
 
 
     class InfoboxViewHolder extends RecyclerView.ViewHolder {
-        private final TextView infoboxItemView;
+        private final ImageView iconImage;
+        private final TextView nameTextView, categoryTextView, birthYearTextView;
 
         private InfoboxViewHolder(@NonNull View itemView) {
             super(itemView);
-            infoboxItemView = itemView.findViewById(R.id.textView);
+            iconImage = itemView.findViewById(R.id.db_display_image_view);
+            nameTextView = itemView.findViewById(R.id.db_display_name_text_view);
+            categoryTextView = itemView.findViewById(R.id.db_display_category_text_view);
+            birthYearTextView = itemView.findViewById(R.id.db_display_birthyear_text_view);
         }
     }
 
     private final LayoutInflater mInflater;
     private List<Infobox> _infoboxes; // Cached copy of words
 
-    InfoboxListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
+    InfoboxListAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+    }
 
     @Override
     public InfoboxViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.recyclerview_infobox_item, parent, false);
+        View itemView = mInflater.inflate(R.layout.review_db_display_item, parent, false);
         return new InfoboxViewHolder(itemView);
     }
 
@@ -38,14 +48,21 @@ public class InfoboxListAdapter extends RecyclerView.Adapter<InfoboxListAdapter.
     public void onBindViewHolder(InfoboxViewHolder holder, int position) {
         if (_infoboxes != null) {
             Infobox current = _infoboxes.get(position);
-            holder.infoboxItemView.setText(current.getInfobox().getName()); // TODO
+
+            ByteArrayInputStream bis = new ByteArrayInputStream(current.getImageBlob());
+            Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
+            holder.iconImage.setImageBitmap(bp);
+
+            holder.nameTextView.setText(current.getInfobox().getName());
+            holder.categoryTextView.setText(current.getInfobox().getCategory());
+            holder.birthYearTextView.setText(String.valueOf(current.getInfobox().getBirthYear()));
         } else {
             // Covers the case of data not being ready yet.
-            holder.infoboxItemView.setText("No Word");
+            // could put placeholder data here.
         }
     }
 
-    void setInfoboxes(List<Infobox> infoboxes){
+    void setInfoboxes(List<Infobox> infoboxes) {
         _infoboxes = infoboxes;
         notifyDataSetChanged();
     }
