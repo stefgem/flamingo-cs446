@@ -211,7 +211,7 @@ public class QuestionFragment extends Fragment {
             for (int i = 0; i < answerButtons.size(); i++) {
                 answerButtons.get(i).getBackground().clearColorFilter();
             }
-            //QuestionContent questionContent = questionViewModel.getQuestionContent();
+            //QuestionContent questionContent = questionViewModel.generateQuestionContent();
             QuestionContent questionContent =
                     questionViewModel.getPreloadedAtIndex(currentQuestionCount);
             populateQuestion(questionContent);
