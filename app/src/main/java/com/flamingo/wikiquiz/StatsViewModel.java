@@ -1,6 +1,7 @@
 package com.flamingo.wikiquiz;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -20,6 +21,8 @@ public class StatsViewModel extends AndroidViewModel {
 
     public List<String> getAllScoresStrings() {
         List<String> formattedStrings = new ArrayList<>();
+        _allScores = _repository.getAllUserStats();
+        Log.e("All scores", "" + _allScores);
         for (UserQuizStat userQuizStat: _allScores) {
             String tempString = "Questions: " + userQuizStat.getNumQuestions() + ", Score: " + userQuizStat.getScore();
             formattedStrings.add(tempString);

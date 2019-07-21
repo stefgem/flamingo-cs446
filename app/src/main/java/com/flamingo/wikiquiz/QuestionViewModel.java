@@ -1,23 +1,12 @@
 package com.flamingo.wikiquiz;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +31,8 @@ public class QuestionViewModel extends AndroidViewModel {
     }
 
     List<Infobox> getAllInfoBoxes() {
+        _allInfoBoxes.clear();
+        _allInfoBoxes = _repository.getAllInfoboxes();
         return _allInfoBoxes;
     }
 
@@ -49,7 +40,7 @@ public class QuestionViewModel extends AndroidViewModel {
         return _repository.getInfoboxesInCategory(category);
     }
 
-    public QuestionContent getQuestionContent() {
+    public QuestionContent generateQuestionContent() {
         int infoBoxSize = _allInfoBoxes.size();
 
         QuestionContent qc = new QuestionContent();
@@ -112,7 +103,7 @@ public class QuestionViewModel extends AndroidViewModel {
         _preloadedQuestionContentList.clear();
 
         for (int i = 0; i < numWanted; i++) {
-            QuestionContent questionContent = getQuestionContent();
+            QuestionContent questionContent = generateQuestionContent();
             _preloadedQuestionContentList.add(questionContent);
         }
     }
@@ -132,7 +123,7 @@ public class QuestionViewModel extends AndroidViewModel {
         _preloadedQuestionContentList = new ArrayList<>(preloadedQCs);
     }
 
-    public void fetchDataFromWikipedia(){
+    public void fetchDataFromWikipedia() {
 
 
         _repository.fetchDataFromWikipedia();

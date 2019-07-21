@@ -6,27 +6,46 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/gameOver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Game Over!"
+        android:textAlignment="center"
+        android:textSize="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/scoreDisplay"
+        app:layout_constraintVertical_bias="1"/>
+    <TextView
         android:id="@+id/scoreDisplay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="End of the quiz"
         android:textAlignment="center"
+        android:textSize="52dp"
+        android:textStyle="bold"
+        app:layout_constraintVertical_bias="1"
         app:layout_constraintBottom_toTopOf="@+id/restartQuizButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/gameOver"/>
 
     <Button
         android:id="@+id/restartQuizButton"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="Choose new quiz"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scoreDisplay" />
+        app:layout_constraintTop_toBottomOf="@+id/scoreDisplay"
+        android:backgroundTint="@android:color/holo_green_dark"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

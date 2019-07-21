@@ -40,6 +40,8 @@ public class InfoboxRepository {
     }
 
     List<Infobox> getAllInfoboxes() {
+        _allInfoboxes.clear();
+        resyncInfoboxesWithDb();
         return _allInfoboxes;
     }
 
@@ -57,6 +59,7 @@ public class InfoboxRepository {
 
     public void deleteAll() {
         _infoboxDao.deleteAll();
+        resyncInfoboxesWithDb();
     }
 
     @Nullable // Note that this method may return null!!

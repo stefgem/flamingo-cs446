@@ -1,7 +1,6 @@
 package com.flamingo.wikiquiz;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
