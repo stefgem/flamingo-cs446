@@ -15,26 +15,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.ByteArrayInputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 
 public class QuestionFragment extends Fragment {
 
 
-    private static final int NUM_TOTAL_QUESTIONS = 3; // TODO change this when done w/ debug test
     private static final int CORRECT_ANSWER_POINTS_VALUE = 100;
     private static final String SUBMIT_STRING = "Submit Answer";
     private static final String NEXT_STRING = "Next Question";
     private static final String LAST_STRING = "Done";
+
+    private static int NUM_TOTAL_QUESTIONS = 3;
+    private static boolean IS_BLUETOOTH_SESSION;
+    private static boolean IS_CLIENT;
 
     private int currentQuestionCount = 0;
     private int selectedAnswer = -1;
@@ -53,22 +60,24 @@ public class QuestionFragment extends Fragment {
     private QuestionViewModel questionViewModel;
     private List<Infobox> infoboxesList;
 
+    private List<Boolean> bluetoothCorrectLog;
+    private List<Timestamp> bluetoothTimestampLog;
+    private List<Boolean> bluetoothHintLog;
+
 
     public QuestionFragment() {
         // Required empty public constructor
     }
 
 
-    // TODO: Rename and change types and number of parameters
-    public static QuestionFragment newInstance() {
-        QuestionFragment fragment = new QuestionFragment();
-        return fragment;
-    }
-
     @SuppressLint("ShowToast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        IS_BLUETOOTH_SESSION = getArguments().getBoolean("isBluetooth");
+        IS_CLIENT = getArguments().getBoolean("isClient");
+
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
 
         toast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
@@ -127,7 +136,13 @@ public class QuestionFragment extends Fragment {
 
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
-        questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+        if (IS_CLIENT) {
+            List<QuestionContent> hostQCs = new ArrayList<>();
+            // TODO hostQCs assign here
+            questionViewModel.setAllPreloadedQCs(hostQCs);
+        } else {
+            questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+        }
 
         // TODO check if there is a bluetooth connection - if so, set preloaded to match the host
         //  use questionViewModel.setAllPreloadedQCs(....);
@@ -149,6 +164,10 @@ public class QuestionFragment extends Fragment {
 //        questionViewModel.setAllPreloadedQCs(testQCList);
         // END OF DEBUG TEST
 
+        bluetoothCorrectLog = new ArrayList<>();
+        bluetoothTimestampLog = new ArrayList<>();
+        bluetoothHintLog = new ArrayList<>();
+
         gotoNextQuestion();
 
         return view;
@@ -168,19 +187,23 @@ public class QuestionFragment extends Fragment {
 
     private void submitAnswer() {
         String toastString;
-
+        Timestamp timestamp = makeTimestamp();
+        bluetoothTimestampLog.add(timestamp);
         if (selectedAnswer == correctAnswer) {
             if (usedHint) {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE / 2;
+                bluetoothHintLog.add(true);
             } else {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE;
+                bluetoothHintLog.add(false);
             }
             scoreCountView.setText("Score: " + currentScore);
             toastString = "Correct!";
+            bluetoothCorrectLog.add(true);
         } else {
             toastString = "Incorrect.";
+            bluetoothCorrectLog.add(false);
         }
-
         toast.setText(toastString);
         toast.show();
 
@@ -222,11 +245,7 @@ public class QuestionFragment extends Fragment {
             populateQuestion(questionContent);
             currentQuestionCount++;
         } else {
-            Bundle bundle = new Bundle();
-            bundle.putInt("score", currentScore);
-            bundle.putInt("numQuestions", NUM_TOTAL_QUESTIONS);
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
+            handleEndOfQuiz();
         }
     }
 
@@ -284,12 +303,6 @@ public class QuestionFragment extends Fragment {
     private void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + currentQuestionCount);
 
-//        Picasso.get()
-//                //.load(questionContent.imagePath)
-//                .load("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Queen_Elizabeth_II_in_March_2015.jpg/800px-Queen_Elizabeth_II_in_March_2015.jpg")
-//                .resize(200, 200)
-//                .centerCrop()
-//                .into(personImageView);
         if (questionContent != null && questionContent.imageBlob != null) {
             ByteArrayInputStream bis = new ByteArrayInputStream(questionContent.imageBlob);
             Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
@@ -307,5 +320,32 @@ public class QuestionFragment extends Fragment {
             }
         }
     }
+
+    private void handleEndOfQuiz() {
+        if (!IS_BLUETOOTH_SESSION) {
+            moveToEndQuizFragment();
+        } else if (IS_CLIENT) {
+            // TODO
+        } else {
+            // TODO
+        }
+    }
+
+    private void moveToEndQuizFragment() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("score", currentScore);
+        bundle.putInt("numQuestions", NUM_TOTAL_QUESTIONS);
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
+    }
+
+    private void moveToMultiplayerDoneFragment() {
+
+    }
+
+    private Timestamp makeTimestamp() {
+        return new Timestamp(System.currentTimeMillis());
+    }
+
 
 }
