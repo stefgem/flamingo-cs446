@@ -76,7 +76,10 @@ public class QuestionFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         IS_BLUETOOTH_SESSION = getArguments().getBoolean("isBluetooth");
-        IS_CLIENT = getArguments().getBoolean("isClient");
+        IS_CLIENT = false;
+        if (IS_BLUETOOTH_SESSION) {
+            IS_CLIENT = getArguments().getBoolean("isClient");
+        }
 
         questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
 
@@ -142,11 +145,8 @@ public class QuestionFragment extends Fragment {
             questionViewModel.setAllPreloadedQCs(hostQCs);
         } else {
             questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+
         }
-
-        // TODO check if there is a bluetooth connection - if so, set preloaded to match the host
-        //  use questionViewModel.setAllPreloadedQCs(....);
-
 
         // START OF DEBUG TEST
 //        QuestionContent testQC = new QuestionContent();
