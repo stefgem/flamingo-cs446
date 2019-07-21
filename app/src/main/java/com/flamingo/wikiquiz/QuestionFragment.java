@@ -118,7 +118,6 @@ public class QuestionFragment extends Fragment {
                 } else {
                     gotoNextQuestion();
                     submitButton.setText(SUBMIT_STRING);
-                    submitButton.setEnabled(false);
                 }
             }
         });
@@ -199,6 +198,14 @@ public class QuestionFragment extends Fragment {
         }
     }
 
+    private void clearSelection() {
+        selectedAnswer = -1;
+        submitButton.setEnabled(false);
+        for (int i = 0; i < answerButtons.size(); i++) {
+            answerButtons.get(i).getBackground().clearColorFilter();
+        }
+    }
+
     private void gotoNextQuestion() {
         enableAnswerButtons();
         usedHint = false;
@@ -208,9 +215,7 @@ public class QuestionFragment extends Fragment {
 
             advanceProgressBar();
 
-            for (int i = 0; i < answerButtons.size(); i++) {
-                answerButtons.get(i).getBackground().clearColorFilter();
-            }
+            clearSelection();
             //QuestionContent questionContent = questionViewModel.generateQuestionContent();
             QuestionContent questionContent =
                     questionViewModel.getPreloadedAtIndex(currentQuestionCount);
@@ -240,14 +245,21 @@ public class QuestionFragment extends Fragment {
     private void applyHint() {
         int total = 0;
         int firstRandom = -1;
+        boolean clear = false;
         while (total != 2) {
             int random = new Random().nextInt(4);
             if (random == correctAnswer || random == firstRandom) {
                 continue;
             }
             firstRandom = random;
+            if (random == selectedAnswer) {
+                clear = true;
+            }
             answerButtons.get(random).setEnabled(false);
             total++;
+        }
+        if (clear) {
+            clearSelection();
         }
         hintButton.setEnabled(false);
         usedHint = true;
