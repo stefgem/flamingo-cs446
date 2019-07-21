@@ -5,21 +5,28 @@
     android:layout_height="match_parent"
     tools:context=".StatsFragment">
 
-    <Button
-        android:id="@+id/getBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get website"
-        android:layout_marginTop="50dp"
-        android:layout_centerHorizontal="true"/>
+    <!--<Button-->
+        <!--android:id="@+id/getBtn"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Get website"-->
+        <!--android:layout_marginTop="50dp"-->
+        <!--android:layout_centerHorizontal="true"/>-->
 
-    <WebView
-        android:id="@+id/result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:layout_below="@id/getBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="30dp"/>
+    <!--<WebView-->
+        <!--android:id="@+id/result"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="30sp"-->
+        <!--android:layout_below="@id/getBtn"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_margin="30dp"/>-->
+
+    <ListView
+        android:id="@+id/statsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </RelativeLayout>
