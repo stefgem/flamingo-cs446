@@ -13,5 +13,6 @@
 /.idea/runConfigurations.xml
 .DS_Store
 /build
+/app/build
 /captures
 .externalNativeBuild
