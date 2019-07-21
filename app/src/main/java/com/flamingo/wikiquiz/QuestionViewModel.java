@@ -1,12 +1,23 @@
 package com.flamingo.wikiquiz;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,14 +25,17 @@ import java.util.Random;
 
 public class QuestionViewModel extends AndroidViewModel {
 
-    private InfoboxRepository _repository;
+    public InfoboxRepository _repository;
     private List<Infobox> _allInfoBoxes;
     private List<Infobox> _infoboxesInCategory;
     private int numberOfQuestionTypes = 2;
     private List<QuestionContent> _preloadedQuestionContentList;
+    private Application _application;
+
 
     public QuestionViewModel(@NonNull Application application) {
         super(application);
+        _application = application;
         _repository = new InfoboxRepository(application);
         _allInfoBoxes = _repository.getAllInfoboxes();
         _preloadedQuestionContentList = new ArrayList<QuestionContent>();
@@ -69,7 +83,7 @@ public class QuestionViewModel extends AndroidViewModel {
                 int questionInfoboxIndex = new Random().nextInt(infoBoxSize);
                 Infobox questionInfobox = _allInfoBoxes.get(questionInfoboxIndex);
                 qc.imageBlob = questionInfobox.getImageBlob();
-                qc.questionString = "In What year was this person born?";
+                qc.questionString = "In what year was this person born?";
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
                 qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
@@ -118,6 +132,12 @@ public class QuestionViewModel extends AndroidViewModel {
         _preloadedQuestionContentList = new ArrayList<>(preloadedQCs);
     }
 
+    public void fetchDataFromWikipedia(){
+
+
+        _repository.fetchDataFromWikipedia();
+        _allInfoBoxes = _repository.getAllInfoboxes();
+    }
 
     // seemingly unneeded stuff below
 

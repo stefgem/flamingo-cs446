@@ -4,28 +4,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 
 
 public class SettingsFragment extends Fragment {
 
     public SettingsFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment SettingsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -37,8 +27,20 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        final QuestionViewModel questionViewModel = ViewModelProviders.of(getActivity()).get(QuestionViewModel.class);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        Button deleteDbButton = view.findViewById(R.id.delete_db_button);
+
+        deleteDbButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                questionViewModel.deleteAllDatabaseRows();
+                String toastMsg = "Database nuke initiated. \n Due to sync issues," +
+                        " deletion may not be noticed until the app activity is killed and relaunched.";
+                Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+        return view;
     }
-
-
 }
