@@ -20,10 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-@Database(entities = {Infobox.class}, version = 1, exportSchema = false)
+@Database(entities = {Infobox.class, UserQuizStat.class}, version = 1, exportSchema = false)
 public abstract class InfoboxRoomDatabase extends RoomDatabase {
 
     public abstract InfoboxDao infoboxDao();
+    public abstract UserQuizStatDao userQuizStatDao();
 
     // make the database a singleton so we don't have multiple instances of the same database
     private static volatile InfoboxRoomDatabase INSTANCE;
