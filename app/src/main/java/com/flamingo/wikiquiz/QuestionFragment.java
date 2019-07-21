@@ -219,7 +219,7 @@ public class QuestionFragment extends Fragment {
         } else {
             Bundle bundle = new Bundle();
             bundle.putInt("score", currentScore);
-            bundle.putInt("numQuestion", NUM_TOTAL_QUESTIONS);
+            bundle.putInt("numQuestions", NUM_TOTAL_QUESTIONS);
             NavHostFragment.findNavController(this)
                     .navigate(R.id.action_questionFragment_to_endQuizFragment, bundle);
         }
