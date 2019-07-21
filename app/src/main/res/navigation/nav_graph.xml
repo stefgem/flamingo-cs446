@@ -58,5 +58,8 @@
         android:name="com.flamingo.wikiquiz.LaunchMultiplayerFragment"
         android:label="fragment_launch_multiplayer"
         tools:layout="@layout/fragment_launch_multiplayer">
+        <action
+            android:id="@+id/action_launchMultiplayerFragment_to_questionFragment"
+            app:destination="@id/questionFragment" />
     </fragment>
 </navigation>

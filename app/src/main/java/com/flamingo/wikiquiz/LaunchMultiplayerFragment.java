@@ -27,6 +27,9 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,35 +88,13 @@ public class LaunchMultiplayerFragment extends Fragment {
 
                         mConnectThread = new ConnectThread(device);
                         mConnectThread.run();
-//                        try {
-//                            btSocket = createBluetoothSocket(device);
-//                        } catch (IOException e) {
-//                            fail = true;
-//                            Toast.makeText(getContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
-//                        }
-//                        // Establish the Bluetooth socket connection.
-//                        try {
-//                            btSocket.connect();
-//                        } catch (IOException e) {
-//                            try {
-//                                fail = true;
-//                                btSocket.close();
-//                                handler.obtainMessage(CONNECTING_STATUS, -1, -1)
-//                                        .sendToTarget();
-//                            } catch (IOException e2) {
-//                                //insert code to deal with this
-//                                Toast.makeText(getContext(), "Socket creation failed", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                        if (fail == false) {
-//                            mConnectedThread = new ConnectedThread(btSocket);
-//                            mConnectedThread.start();
-//
-//                            handler.obtainMessage(CONNECTING_STATUS, 1, -1, name)
-//                                    .sendToTarget();
-//                        }
                     }
                 }.start();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isBluetooth", true);
+                bundle.putBoolean("isClient", true);
+                NavHostFragment.findNavController(getParentFragment())
+                        .navigate(R.id.action_launchMultiplayerFragment_to_questionFragment, bundle);
             }
         });
 
@@ -129,9 +110,14 @@ public class LaunchMultiplayerFragment extends Fragment {
                     Toast.makeText(getContext(), "Device now discoverable", Toast.LENGTH_SHORT).show();
                     mAcceptThread = new AcceptThread();
                     mAcceptThread.run();
-                    String sendMessage = "sending";
-                    byte[] send = sendMessage.getBytes();
-                    mConnectedThread.write(send);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isBluetooth", true);
+                    bundle.putBoolean("isClient", false);
+                    NavHostFragment.findNavController(getParentFragment())
+                            .navigate(R.id.action_launchMultiplayerFragment_to_questionFragment, bundle);
+//                    String sendMessage = "sending";
+//                    byte[] send = sendMessage.getBytes();
+//                    mConnectedThread.write(send);
                 } else {
                     // Device does not support bluetooth
                 }
@@ -313,6 +299,8 @@ public class LaunchMultiplayerFragment extends Fragment {
                 Log.e("ConnectThread", "Socket's create() method failed", e);
             }
             mmSocket = tmp;
+            App app = (App)getActivity().getApplication();
+            app.setBTSocket(mmSocket);
         }
 
         public void run() {

@@ -29,9 +29,11 @@ public class LaunchQuizFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_launch_quiz, container, false);
 
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isBluetooth", false);
         Button quizBtn = view.findViewById(R.id.launchQuizButton);
         quizBtn.setOnClickListener(Navigation.createNavigateOnClickListener(
-                R.id.action_launchQuizFragment_to_questionFragment, null));
+                R.id.action_launchQuizFragment_to_questionFragment, bundle));
 
         Button multiBtn = view.findViewById(R.id.launchMultiplayerButton);
         multiBtn.setOnClickListener(Navigation.createNavigateOnClickListener(
