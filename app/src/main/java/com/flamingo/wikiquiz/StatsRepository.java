@@ -16,7 +16,7 @@ public class StatsRepository {
     }
 
     List<UserQuizStat> getAllUserStats() {
-        return _allUserStats;
+        return _statsDao.getAllUserStats();
     }
 
     void insert(UserQuizStat userQuizStat) {

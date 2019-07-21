@@ -33,7 +33,7 @@ public class EndQuizFragment extends Fragment {
         statsViewModel.insertStat(userQuizStat);
         List<String> list = statsViewModel.getAllScoresStrings();
 
-        Log.e("EndQuizFragment", list.get(list.size()-1));
+//        Log.e("EndQuizFragment", list.get(list.size()-1));
         View view = inflater.inflate(R.layout.fragment_end_quiz, container, false);
         TextView tv = view.findViewById(R.id.scoreDisplay);
         tv.setText("Final score: " + score);
