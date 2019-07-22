@@ -27,13 +27,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="Host a Session"
-        app:layout_constraintBottom_toTopOf="@+id/host_descrip"
+        app:layout_constraintBottom_toTopOf="@+id/launch_multi_horiz_guideline2"
         app:layout_constraintEnd_toStartOf="@+id/launch_multi_vert_guideline1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/launch_multi_horiz_guideline1"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <Button
         android:id="@+id/joinSession"
@@ -42,13 +42,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="Join a Session"
-        app:layout_constraintBottom_toTopOf="@+id/join_descrip"
+        app:layout_constraintBottom_toTopOf="@+id/launch_multi_horiz_guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/launch_multi_vert_guideline1"
         app:layout_constraintTop_toTopOf="@+id/launch_multi_horiz_guideline1"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <ListView
         android:id="@+id/devicesListView"
@@ -78,6 +78,7 @@
         android:id="@+id/launch_multi_vert_line_1"
         android:layout_width="2dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
         android:background="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/launch_multi_horiz_guideline2"
@@ -97,6 +98,7 @@
         android:id="@+id/launch_multi_horiz_line2"
         android:layout_width="0dp"
         android:layout_height="2dp"
+        android:layout_marginBottom="32dp"
         android:background="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/launch_multi_horiz_guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +110,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.2"
+        app:layout_constraintGuide_percent="0.15"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -123,7 +125,8 @@
         app:layout_constraintBottom_toTopOf="@+id/launch_multi_horiz_guideline2"
         app:layout_constraintEnd_toStartOf="@+id/launch_multi_vert_guideline1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hostSession" />
+        app:layout_constraintTop_toBottomOf="@+id/hostSession"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/join_descrip"
@@ -137,13 +140,14 @@
         app:layout_constraintBottom_toTopOf="@+id/launch_multi_horiz_guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/launch_multi_vert_guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/joinSession" />
+        app:layout_constraintTop_toBottomOf="@+id/joinSession"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/launch_multi_horiz_guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
+        app:layout_constraintGuide_percent="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

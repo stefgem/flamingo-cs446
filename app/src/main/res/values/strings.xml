@@ -8,6 +8,6 @@
     <string name="description_quiz_MP">Host a bluetooth quiz session, or join a hosted session.
         Hosting requires that Wikipedia data has been loaded.</string>
     <string name="description_load_wikipedia_data">Load quiz data from Wikipedia. Once this data has been downloaded, quizzes can be played offline.</string>
-    <string name="bluetooth_host_descrip">Placeholder text for describing what happens when the host button is pressed.</string>
-    <string name="bluetooth_join_descrip">Placeholder text for describing what happens whe the join button is pressed.</string>
+    <string name="bluetooth_host_descrip">Host a new multiplayer quiz session.</string>
+    <string name="bluetooth_join_descrip">Search for host sessions to join.</string>
 </resources>

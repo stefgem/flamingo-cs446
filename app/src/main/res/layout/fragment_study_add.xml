@@ -17,20 +17,28 @@
         app:layout_constraintStart_toStartOf="@+id/database_recyclerview"
         app:layout_constraintTop_toBottomOf="@id/review_title" />
 
+    <View
+        android:id="@+id/db_display_horizLine1"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/display_header"
+        app:layout_constraintEnd_toEndOf="@id/database_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/database_recyclerview" />
 
     <View
         android:id="@+id/db_display_horizLine2"
         android:layout_width="0dp"
-        android:layout_height="4dp"
+        android:layout_height="3dp"
         android:background="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/database_recyclerview"
         app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
         app:layout_constraintStart_toStartOf="@+id/database_recyclerview" />
 
     <View
-        android:id="@+id/hdb_display_horizLine3"
+        android:id="@+id/db_display_horizLine3"
         android:layout_width="0dp"
-        android:layout_height="4dp"
+        android:layout_height="3dp"
         android:background="@android:color/black"
         app:layout_constraintEnd_toEndOf="@+id/database_recyclerview"
         app:layout_constraintStart_toStartOf="@+id/database_recyclerview"
@@ -55,7 +63,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="64dp"
-        android:background="@android:color/holo_orange_light"
+        android:background="@drawable/db_display_item_border"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

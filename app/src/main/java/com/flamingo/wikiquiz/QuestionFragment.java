@@ -148,22 +148,6 @@ public class QuestionFragment extends Fragment {
 
         }
 
-        // START OF DEBUG TEST
-//        QuestionContent testQC = new QuestionContent();
-//        testQC.questionString = "Is setting the preloaded array working?";
-//        testQC.answers = new ArrayList<>();
-//        testQC.answers.add("Yes");
-//        testQC.answers.add("Also Yes");
-//        testQC.answers.add("Definitely");
-//        testQC.answers.add("For sure");
-//        testQC.correctAnswer = 2;
-//
-//        ArrayList<QuestionContent> testQCList = new ArrayList<>();
-//        testQCList.add(testQC);
-//
-//        questionViewModel.setAllPreloadedQCs(testQCList);
-        // END OF DEBUG TEST
-
         bluetoothCorrectLog = new ArrayList<>();
         bluetoothTimestampLog = new ArrayList<>();
         bluetoothHintLog = new ArrayList<>();

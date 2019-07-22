@@ -36,7 +36,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 questionViewModel.deleteAllDatabaseRows();
-                String toastMsg = "Database wipe initiatied.";
+                String toastMsg = "Database wipe initiated.";
                 Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
         });

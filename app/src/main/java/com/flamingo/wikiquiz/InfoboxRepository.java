@@ -128,12 +128,12 @@ public class InfoboxRepository {
     }
 
     private void populateDbPoliticians() {
-        String[] politicians_urls =  {"Donald_Trump", "Barack_Obama", "Elizabeth_II","Abraham_Lincoln",
-                "John_F._Kennedy", "Queen_Victoria", "George_W._Bush", "Henry_VIII_of_England", "Nelson_Mandela",
-                "Ronald_Reagan", "Winston_Churchill", "Bill_Clinton", "George_Washington", "Elizabeth_I",
+        String[] politicians_urls = {"Donald_Trump", "Barack_Obama", "Elizabeth_II", "Abraham_Lincoln",
+                "John_F._Kennedy", "George_W._Bush", "Nelson_Mandela",
+                "Ronald_Reagan", "Winston_Churchill", "Bill_Clinton", "George_Washington",
                 "Diana,_Princess_of_Wales", "Mahatma_Gandhi", "Franklin_D._Roosevelt", "Charles,_Prince_of_Wales",
-                "Prince Philip,_Duke_of_Edinburgh", "George_H._W._Bush", "Joseph_Stalin", "Osama_bin_Laden",
-                "Christopher_Columbus", "Che_Guevara", "Richard_Nixon", "Vladimir_Putin", "Theodore_Roosevelt",
+                "Prince Philip,_Duke_of_Edinburgh", "George_H._W._Bush", "Osama_bin_Laden",
+                "Che_Guevara", "Richard_Nixon", "Vladimir_Putin", "Theodore_Roosevelt",
                 "Princess_Margaret,_Countess_of_Snowdon", "George_VI", "Thomas_Jefferson", "Jimmy_Carter"};
 
         for (String url : politicians_urls) {
@@ -144,11 +144,11 @@ public class InfoboxRepository {
 
     private void populateDbMillenniums() {
         String[] millenniums_urls = {"Willow_Smith", "Billie_Eilish", "Millie_Bobby_Brown", "Maddie_Ziegler",
-                "Lil_Pump", "Prince_George_of_Cambridge", "Noah_Cyrus", "Danielle_Bregoli", "Lady_Louise_Windsor",
-                "Jackie_Evancho", "Princess_Charlotte_of_Cambridge", "Mackenzie_Foy", "Barron_Trump", "Finn_Wolfhard",
+                "Lil_Pump", "Prince_George_of_Cambridge", "Noah_Cyrus", "Lady_Louise_Windsor",
+                "Jackie_Evancho", "Mackenzie_Foy", "Finn_Wolfhard",
                 "Gaten_Matarazzo", "JoJo_Siwa", "Jacob_Tremblay", "Zion_Williamson", "James,_Viscount_Severn",
                 "Yara_Shahidi", "LaMelo_Ball", "Rowan_Blanchard", "Frankie_Jonas", "Skai_Jackson", "Jazz_Jennings",
-                "Isabela_Moner", "Auli'i_Cravalho", "Madison_De_La_Garza", "Quvenzhané_Wallis", "Dafne_Keen",
+                "Isabela_Moner", "Auli'i_Cravalho", "Dafne_Keen",
                 "Zaira_Wasim", "Grace_VanderWaal"};
 
         for (String url : millenniums_urls) {

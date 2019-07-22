@@ -6,20 +6,20 @@
     android:id="@+id/db_header"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@android:color/holo_blue_light"
+    android:background="@color/colorPrimaryDark"
     android:visibility="visible">
 
 
     <View
         android:id="@+id/db_header_outside_vert_line_1"
-        android:layout_width="4dp"
+        android:layout_width="3dp"
         android:layout_height="match_parent"
         android:background="@android:color/black"
         app:layout_constraintStart_toStartOf="parent" />
 
     <View
         android:id="@+id/db_header_outside_vert_line_2"
-        android:layout_width="4dp"
+        android:layout_width="3dp"
         android:layout_height="match_parent"
         android:background="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -53,7 +53,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Image"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/db_header_guideline1"
@@ -70,7 +70,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Name"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/db_header_guideline2"
@@ -86,7 +86,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Category"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/db_header_guideline3"
@@ -95,14 +95,14 @@
 
     <TextView
         android:id="@+id/db_header_birth_year"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Birth Year"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,7 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/db_header_guideline3"
