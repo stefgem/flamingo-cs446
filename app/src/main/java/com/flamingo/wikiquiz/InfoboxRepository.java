@@ -32,11 +32,19 @@ public class InfoboxRepository {
         _DB = db;
         _infoboxDao = db.infoboxDao();
         _allInfoboxes = _infoboxDao.getAllInfoboxes();
+        int i = 0;
+        for (Infobox ib : _allInfoboxes) {
+            ib.setRowId(i);
+        }
         _infoboxIdList = _infoboxDao.getInfoboxIdList();
     }
 
     void resyncInfoboxesWithDb() {
         _allInfoboxes = _infoboxDao.getAllInfoboxes();
+        int i = 0;
+        for (Infobox ib : _allInfoboxes) {
+            ib.setRowId(i);
+        }
     }
 
     List<Infobox> getAllInfoboxes() {
@@ -64,8 +72,11 @@ public class InfoboxRepository {
 
     @Nullable // Note that this method may return null!!
     public Infobox getInfoboxById(int id) {
-
-        return _infoboxDao.getInfoboxById(id);
+        if (id < _allInfoboxes.size()) {
+            return _allInfoboxes.get(id);
+        } else {
+            return null;
+        }
     }
 
     public LiveData<List<Integer>> getInfoboxIdList() {
@@ -156,8 +167,7 @@ public class InfoboxRepository {
                     break;
                 }
             }
-
-
+            
             // The following downloads images into a byte[]
             URL urlImage = new URL(imageUrl);
             InputStream in = urlImage.openStream();

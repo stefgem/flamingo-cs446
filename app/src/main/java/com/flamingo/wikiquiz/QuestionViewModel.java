@@ -57,6 +57,7 @@ public class QuestionViewModel extends AndroidViewModel {
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
                 qc.answers.set(qc.correctAnswer, questionInfobox.getName());
+                qc.infoboxes.set(qc.correctAnswer, questionInfobox);
                 ArrayList<Integer> otherAnswers = new ArrayList<>();
                 otherAnswers.add(questionInfoboxIndex);
                 for (int i = 0; i < 4; i++) {
@@ -70,6 +71,7 @@ public class QuestionViewModel extends AndroidViewModel {
                         }
                         otherAnswers.add(otherAnswerIndex);
                         qc.answers.set(i, _allInfoBoxes.get(otherAnswerIndex).getName());
+                        qc.infoboxes.set(i, _allInfoBoxes.get(otherAnswerIndex));
                     }
                 }
             } else {
@@ -80,6 +82,7 @@ public class QuestionViewModel extends AndroidViewModel {
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
                 qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
+                qc.infoboxes.set(qc.correctAnswer, questionInfobox);
                 ArrayList<String> otherAnswers = new ArrayList<>();
                 otherAnswers.add(Integer.toString(questionInfobox.getBirthYear()));
                 for (int i = 0; i < 4; i++) {
@@ -94,6 +97,7 @@ public class QuestionViewModel extends AndroidViewModel {
                         }
                         otherAnswers.add(Integer.toString(otherInfobox.getBirthYear()));
                         qc.answers.set(i, Integer.toString(otherInfobox.getBirthYear()));
+                        qc.infoboxes.set(i, otherInfobox);
                     }
                 }
             }
@@ -123,8 +127,7 @@ public class QuestionViewModel extends AndroidViewModel {
     public void setPreloadedAtIndex(int index, QuestionContent qc) {
         if (_preloadedQuestionContentList.size() <= index) {
             _preloadedQuestionContentList.add(qc);
-        }
-        else {
+        } else {
             _preloadedQuestionContentList.set(index, qc);
         }
     }
@@ -153,9 +156,7 @@ public class QuestionViewModel extends AndroidViewModel {
 
     @Nullable // if the id doesn't match an entry, this method will return null
     public Infobox getInfoboxById(int id) {
-
         return _repository.getInfoboxById(id);
-
     }
 
     public LiveData<List<Integer>> getInfoboxIdList() {

@@ -11,6 +11,7 @@ QuestionContent {
     public String questionString;
     public ArrayList<String> answers;
     public int correctAnswer;
+    public ArrayList<Infobox> infoboxes;
 
     public QuestionContent() {
         // Empty constructor
