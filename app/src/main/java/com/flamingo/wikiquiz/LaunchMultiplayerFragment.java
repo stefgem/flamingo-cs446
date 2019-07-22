@@ -34,6 +34,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class LaunchMultiplayerFragment extends Fragment {
@@ -42,9 +43,15 @@ public class LaunchMultiplayerFragment extends Fragment {
     private BluetoothAdapter bluetoothAdapter;
     private ArrayAdapter<String> deviceNamesAdapter;
 
+    private QuestionViewModel questionViewModel;
+
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
+
+    private static final int MESSAGE_READ = 1;
+    private static final int MESSAGE_WRITE = 2;
+    private static final int MESSAGE_TOAST = 3;
 
     public LaunchMultiplayerFragment() {
         // Required empty constructor
@@ -58,6 +65,9 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         deviceNamesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        questionViewModel = ViewModelProviders.of(getActivity())
+                .get(QuestionViewModel.class);
 
         ListView devicesListView = view.findViewById(R.id.devicesListView);
         devicesListView.setAdapter(deviceNamesAdapter);
@@ -86,6 +96,9 @@ public class LaunchMultiplayerFragment extends Fragment {
                         mConnectThread.run();
                     }
                 }.start();
+//                while(!questionViewModel.getQuestionsSent()) {
+//                    // Stay in this loop until server has sent all the question content
+//                }
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isBluetooth", true);
                 bundle.putBoolean("isClient", true);
@@ -106,14 +119,27 @@ public class LaunchMultiplayerFragment extends Fragment {
                     Toast.makeText(getContext(), "Device now discoverable", Toast.LENGTH_SHORT).show();
                     mAcceptThread = new AcceptThread();
                     mAcceptThread.run();
+                    String sendMessage = "sent!";
+                    byte[] send = sendMessage.getBytes();
+                    //mConnectedThread.write(send, 0, 0);
+//                    questionViewModel.generatePreloadedQCs(3);
+//                    for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
+//                        ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
+//                        questionContentArray = questionContent.getContentByteArray();
+//                        int questionIndex = 0;
+//                        for (ArrayList<byte[]> questionField : questionContentArray) {
+//                            mConnectedThread.write(questionField.get(0), 0, questionIndex);
+//                            mConnectedThread.write(questionField.get(1), 1, questionIndex);
+//                            mConnectedThread.write(questionField.get(3), 3, questionIndex);
+//                        }
+//                    }
+                    questionViewModel.setQuestionsSent(true);
+                    mConnectedThread.write(send, -1, 0);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isBluetooth", true);
                     bundle.putBoolean("isClient", false);
                     NavHostFragment.findNavController(getParentFragment())
                             .navigate(R.id.action_launchMultiplayerFragment_to_questionFragment, bundle);
-//                    String sendMessage = "sending";
-//                    byte[] send = sendMessage.getBytes();
-//                    mConnectedThread.write(send);
                 } else {
                     // Device does not support bluetooth
                 }
@@ -171,6 +197,54 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
     };
 
+    private final Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    QuestionContent qc;
+                    switch (msg.arg1) {
+                        case 0:
+                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+                            qc.setImageBlob(readBuf);
+                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+                            break;
+                        case 1:
+                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+                            qc.setQuestionString(readBuf);
+                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+                            break;
+                        case 3:
+                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+                            qc.setCorrectAnswer(readBuf);
+                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+                            break;
+                        case -1:
+                            questionViewModel.setQuestionsSent(true);
+                    }
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, readBuf.length);
+//                    Toast.makeText(getActivity(), "Received Message: " + readMessage,
+//                            Toast.LENGTH_SHORT).show();
+                    break;
+                case MESSAGE_WRITE:
+                    byte[] writeBuf = (byte[]) msg.obj;
+                    // construct a string from the buffer
+                    String writeMessage = new String(writeBuf);
+                    Toast.makeText(getActivity(), "Sent Question Contents",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                case MESSAGE_TOAST:
+//                    if (getActivity() != null) {
+//                        Toast.makeText(getActivity(), msg.getData().getString("failed"),
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+                    break;
+            }
+        }
+    };
+
     public boolean checkEnableBluetooth() {
         int REQUEST_ENABLE_BT = 1234;
         if (bluetoothAdapter == null) {
@@ -205,6 +279,8 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
 
         // Start the thread to manage the connection and perform transmissions
+        mConnectedThread = new ConnectedThread(socket);
+        mConnectedThread.start();
     }
 
     private class AcceptThread extends Thread {
@@ -236,8 +312,8 @@ public class LaunchMultiplayerFragment extends Fragment {
                     synchronized (LaunchMultiplayerFragment.this) {
                         manageMyConnectedSocket(socket, socket.getRemoteDevice());
 //                        mConnectedThread = new ConnectedThread(socket);
-                        App app = (App)getActivity().getApplication();
-                        app.setBTSocket(socket);
+//                        App app = (App)getActivity().getApplication();
+//                        app.setBTSocket(socket);
 //                        app.setBTConnectedThreadServer(mConnectedThread);
 //                        app.getBTConnectedThreadServer().start();
                         cancel();
@@ -289,8 +365,8 @@ public class LaunchMultiplayerFragment extends Fragment {
             manageMyConnectedSocket(mmSocket, mmDevice);
 
 //            ConnectedThread thread = new ConnectedThread(mmSocket);
-            App app = (App)getActivity().getApplication();
-            app.setBTSocket(mmSocket);
+//            App app = (App)getActivity().getApplication();
+//            app.setBTSocket(mmSocket);
 //            app.setBTConnectedThreadClient(thread);
 //            app.getBTConnectedThreadClient().start();
         }
@@ -300,6 +376,87 @@ public class LaunchMultiplayerFragment extends Fragment {
                 mmSocket.close();
             } catch (IOException closeException) {
                 Log.e("ConnectThread", "Could not close the client socket", closeException);
+            }
+        }
+    }
+
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+        private byte[] mmBuffer; // mmBuffer store for the stream
+
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            // Get the input and output streams; using temp objects because
+            // member streams are final.
+            try {
+                tmpIn = socket.getInputStream();
+            } catch (IOException e) {
+                Log.e("ConnectedThread", "Error occurred when creating input stream", e);
+            }
+            try {
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) {
+                Log.e("ConnectedThread", "Error occurred when creating output stream", e);
+            }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            mmBuffer = new byte[1024];
+            int numBytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs.
+            while (true) {
+                try {
+                    // Read from the InputStream.
+                    numBytes = mmInStream.read(mmBuffer);
+                    // Send the obtained bytes to the UI activity.
+                    Message readMsg = handler.obtainMessage(
+                            MESSAGE_READ, numBytes, -1,
+                            mmBuffer);
+                    readMsg.sendToTarget();
+                } catch (IOException e) {
+                    Log.d("ConnectedThread", "Input stream was disconnected", e);
+                    break;
+                }
+            }
+            int x = 0;
+        }
+
+        // Call this from the main activity to send data to the remote device.
+        public void write(byte[] bytes, int type, int questionIndex) {
+            try {
+                mmOutStream.write(bytes);
+
+                // Share the sent message with the UI activity.
+                handler.obtainMessage(MESSAGE_WRITE, type, questionIndex, bytes).sendToTarget();
+            } catch (IOException e) {
+                Log.e("ConnectedThread", "Error occurred when sending data", e);
+
+                // Send a failure message back to the activity.
+                Message writeErrorMsg =
+                        handler.obtainMessage(MESSAGE_TOAST);
+                Bundle bundle = new Bundle();
+                bundle.putString("failed",
+                        "Couldn't send data to the other device");
+                writeErrorMsg.setData(bundle);
+                handler.sendMessage(writeErrorMsg);
+            }
+        }
+
+        // Call this method from the main activity to shut down the connection.
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) {
+                Log.e("ConnectedThread", "Could not close the connect socket", e);
             }
         }
     }

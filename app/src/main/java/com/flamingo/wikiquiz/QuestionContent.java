@@ -58,4 +58,16 @@ QuestionContent {
 
         return response;
     }
+
+    public void setImageBlob(byte[] imageBytes) {
+        imageBlob = imageBytes;
+    }
+
+    public void setQuestionString(byte[] questionBytes) {
+        questionString = Arrays.toString(questionBytes);
+    }
+
+    public void setCorrectAnswer(byte[] correctAnswerBytes) {
+        correctAnswer = ByteBuffer.wrap(correctAnswerBytes).getInt();
+    }
 }

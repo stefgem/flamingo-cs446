@@ -19,6 +19,7 @@ public class QuestionViewModel extends AndroidViewModel {
     private List<Infobox> _infoboxesInCategory;
     private int numberOfQuestionTypes = 2;
     private List<QuestionContent> _preloadedQuestionContentList;
+    private boolean _questionsSent;
     private Application _application;
 
 
@@ -28,6 +29,7 @@ public class QuestionViewModel extends AndroidViewModel {
         _repository = new InfoboxRepository(application);
         _allInfoBoxes = _repository.getAllInfoboxes();
         _preloadedQuestionContentList = new ArrayList<QuestionContent>();
+        _questionsSent = false;
     }
 
     List<Infobox> getAllInfoBoxes() {
@@ -118,6 +120,15 @@ public class QuestionViewModel extends AndroidViewModel {
         } else return _preloadedQuestionContentList.get(index);
     }
 
+    public void setPreloadedAtIndex(int index, QuestionContent qc) {
+        if (_preloadedQuestionContentList.size() <= index) {
+            _preloadedQuestionContentList.add(qc);
+        }
+        else {
+            _preloadedQuestionContentList.set(index, qc);
+        }
+    }
+
     public void setAllPreloadedQCs(List<QuestionContent> preloadedQCs) {
         _preloadedQuestionContentList.clear();
         _preloadedQuestionContentList = new ArrayList<>(preloadedQCs);
@@ -151,4 +162,11 @@ public class QuestionViewModel extends AndroidViewModel {
         return _repository.getInfoboxIdList();
     }
 
+    public boolean getQuestionsSent() {
+        return _questionsSent;
+    }
+
+    public void setQuestionsSent(boolean sent) {
+        _questionsSent = sent;
+    }
 }

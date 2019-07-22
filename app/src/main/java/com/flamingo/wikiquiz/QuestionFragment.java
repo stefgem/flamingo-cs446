@@ -142,28 +142,27 @@ public class QuestionFragment extends Fragment {
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
         if (IS_CLIENT) {
-            ArrayList<QuestionContent> hostQCs = new ArrayList<QuestionContent>();
-            App app = (App)getActivity().getApplication();
-            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
-            mConnectedThread.start();
+            //ArrayList<QuestionContent> hostQCs = new ArrayList<QuestionContent>();
+//            App app = (App)getActivity().getApplication();
+//            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
+//            mConnectedThread.start();
             // TODO hostQCs assign here
-            questionViewModel.setAllPreloadedQCs(hostQCs);
+            //questionViewModel.setAllPreloadedQCs(hostQCs);
         } else {
-            questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
-            for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
-                ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
-                questionContentArray = questionContent.getContentByteArray();
-                int questionIndex = 0;
-                for (ArrayList<byte[]> questionField : questionContentArray) {
-                    App app = (App)getActivity().getApplication();
-//                    ConnectedThread mConnectedThread = app.getBTConnectedThreadServer();
-                    ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
-                    mConnectedThread.start();
-                    mConnectedThread.write(questionField.get(0), 0, questionIndex);
-                    mConnectedThread.write(questionField.get(1), 1, questionIndex);
-                    mConnectedThread.write(questionField.get(3), 3, questionIndex);
-                }
-            }
+            //questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+//            App app = (App)getActivity().getApplication();
+//            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
+//            mConnectedThread.start();
+//            for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
+//                ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
+//                questionContentArray = questionContent.getContentByteArray();
+//                int questionIndex = 0;
+//                for (ArrayList<byte[]> questionField : questionContentArray) {
+//                    mConnectedThread.write(questionField.get(0), 0, questionIndex);
+//                    mConnectedThread.write(questionField.get(1), 1, questionIndex);
+//                    mConnectedThread.write(questionField.get(3), 3, questionIndex);
+//                }
+//            }
         }
 
         // START OF DEBUG TEST
