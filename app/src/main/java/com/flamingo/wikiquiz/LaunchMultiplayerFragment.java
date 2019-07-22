@@ -44,6 +44,8 @@ public class LaunchMultiplayerFragment extends Fragment {
     private ArrayAdapter<String> deviceNamesAdapter;
 
     private QuestionViewModel questionViewModel;
+    private ArrayList<QuestionContent> readQC;
+    private QuestionContent tempQC;
 
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
@@ -68,6 +70,9 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         questionViewModel = ViewModelProviders.of(getActivity())
                 .get(QuestionViewModel.class);
+
+        readQC = new ArrayList<>();
+        tempQC = new QuestionContent();
 
         ListView devicesListView = view.findViewById(R.id.devicesListView);
         devicesListView.setAdapter(deviceNamesAdapter);
@@ -122,19 +127,19 @@ public class LaunchMultiplayerFragment extends Fragment {
                     String sendMessage = "sent!";
                     byte[] send = sendMessage.getBytes();
                     //mConnectedThread.write(send, 0, 0);
-//                    questionViewModel.generatePreloadedQCs(3);
-//                    for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
-//                        ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
-//                        questionContentArray = questionContent.getContentByteArray();
-//                        int questionIndex = 0;
-//                        for (ArrayList<byte[]> questionField : questionContentArray) {
-//                            mConnectedThread.write(questionField.get(0), 0, questionIndex);
-//                            mConnectedThread.write(questionField.get(1), 1, questionIndex);
-//                            mConnectedThread.write(questionField.get(3), 3, questionIndex);
-//                        }
-//                    }
+                    questionViewModel.generatePreloadedQCs(3);
+                    for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
+                        ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
+                        questionContentArray = questionContent.getContentByteArray();
+                        int questionIndex = 0;
+                        for (ArrayList<byte[]> questionField : questionContentArray) {
+                            mConnectedThread.write(questionField.get(0), 0);
+                            mConnectedThread.write(questionField.get(1), 1);
+                            mConnectedThread.write(questionField.get(3), 3);
+                        }
+                    }
                     questionViewModel.setQuestionsSent(true);
-                    mConnectedThread.write(send, -1, 0);
+//                    mConnectedThread.write(send, -1, 0);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isBluetooth", true);
                     bundle.putBoolean("isClient", false);
@@ -204,23 +209,29 @@ public class LaunchMultiplayerFragment extends Fragment {
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     QuestionContent qc;
-                    switch (msg.arg1) {
+                    switch (msg.arg2) {
                         case 0:
-                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-                            qc.setImageBlob(readBuf);
-                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+//                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+//                            qc.setImageBlob(readBuf);
+//                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+                            tempQC.setImageBlob(readBuf);
                             break;
                         case 1:
-                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-                            qc.setQuestionString(readBuf);
-                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+//                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+//                            qc.setQuestionString(readBuf);
+//                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+                            tempQC.setQuestionString(readBuf);
                             break;
                         case 3:
-                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-                            qc.setCorrectAnswer(readBuf);
-                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+//                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+//                            qc.setCorrectAnswer(readBuf);
+//                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+                            tempQC.setCorrectAnswer(readBuf);
+                            readQC.add(tempQC);
+                            tempQC = new QuestionContent();
                             break;
                         case -1:
+                            questionViewModel.setAllPreloadedQCs(readQC);
                             questionViewModel.setQuestionsSent(true);
                     }
                     // construct a string from the valid bytes in the buffer
@@ -431,12 +442,12 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
 
         // Call this from the main activity to send data to the remote device.
-        public void write(byte[] bytes, int type, int questionIndex) {
+        public void write(byte[] bytes, int type) {
             try {
                 mmOutStream.write(bytes);
 
                 // Share the sent message with the UI activity.
-                handler.obtainMessage(MESSAGE_WRITE, type, questionIndex, bytes).sendToTarget();
+                handler.obtainMessage(MESSAGE_WRITE, type, 0, bytes).sendToTarget();
             } catch (IOException e) {
                 Log.e("ConnectedThread", "Error occurred when sending data", e);
 
