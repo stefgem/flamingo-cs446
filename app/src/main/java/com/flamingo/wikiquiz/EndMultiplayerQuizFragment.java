@@ -82,24 +82,29 @@ public class EndMultiplayerQuizFragment extends Fragment {
 
         // Send the play logs to the other device over bluetooth
         byte[] message = new byte[questionViewModel.getNUM_TOTAL_QUESTIONS() * 10];
+        int msgIndex = 0;
         for (int i = 0; i < questionViewModel.getNUM_TOTAL_QUESTIONS(); i++) {
             if (playerBTCorrectLog[i]) {
-                message[i] = 1;
+                message[msgIndex] = 1;
+                msgIndex++;
             }
             else {
                 message[i] = 0;
+                msgIndex++;
             }
             ByteBuffer bb = ByteBuffer.allocate(8);
             bb.putLong(playerBTTimestampLog[i]);
             for (byte b : bb.array()) {
-                message[i] = b;
-                i++;
+                message[msgIndex] = b;
+                msgIndex++;
             }
             if (playerBTHintLog[i]) {
-                message[i] = 1;
+                message[msgIndex] = 1;
+                msgIndex++;
             }
             else {
-                message[i] = 0;
+                message[msgIndex] = 0;
+                msgIndex++;
             }
         }
         mConnectedThread.write(message, 0);
@@ -127,15 +132,15 @@ public class EndMultiplayerQuizFragment extends Fragment {
                             timestamp[timestampIndex] = b;
                             timestampIndex++;
                             if (timestampIndex == 8) {
-                                opponentBTTimestampLog[index] = ByteBuffer.wrap(timestamp).getInt();
+                                opponentBTTimestampLog[index] = ByteBuffer.wrap(timestamp).getLong();
                                 paramIndex = 2;
                                 timestampIndex = 0;
                             }
                         }
                         else {
                             opponentBTHintLog[index] = b != 0;
-                            paramIndex = 0;
                             index++;
+                            paramIndex = 0;
                         }
                     }
                     break;
