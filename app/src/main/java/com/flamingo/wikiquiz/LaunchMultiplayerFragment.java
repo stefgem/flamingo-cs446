@@ -34,6 +34,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -46,6 +47,8 @@ public class LaunchMultiplayerFragment extends Fragment {
     private QuestionViewModel questionViewModel;
     private ArrayList<QuestionContent> readQC;
     private QuestionContent tempQC;
+    private int readCount;
+    private int nQuestions;
 
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
@@ -73,6 +76,8 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         readQC = new ArrayList<>();
         tempQC = new QuestionContent();
+        readCount = 0;
+        nQuestions = 0;
 
         ListView devicesListView = view.findViewById(R.id.devicesListView);
         devicesListView.setAdapter(deviceNamesAdapter);
@@ -131,7 +136,6 @@ public class LaunchMultiplayerFragment extends Fragment {
                     for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
                         ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
                         questionContentArray = questionContent.getContentByteArray();
-                        int questionIndex = 0;
                         for (ArrayList<byte[]> questionField : questionContentArray) {
                             mConnectedThread.write(questionField.get(0), 0);
                             mConnectedThread.write(questionField.get(1), 1);
@@ -209,18 +213,20 @@ public class LaunchMultiplayerFragment extends Fragment {
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     QuestionContent qc;
-                    switch (msg.arg2) {
+                    switch (readCount) {
                         case 0:
 //                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
 //                            qc.setImageBlob(readBuf);
 //                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
                             tempQC.setImageBlob(readBuf);
+                            readCount++;
                             break;
                         case 1:
 //                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
 //                            qc.setQuestionString(readBuf);
 //                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
                             tempQC.setQuestionString(readBuf);
+                            readCount++;
                             break;
                         case 3:
 //                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
@@ -228,11 +234,19 @@ public class LaunchMultiplayerFragment extends Fragment {
 //                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
                             tempQC.setCorrectAnswer(readBuf);
                             readQC.add(tempQC);
+                            if (readQC.size() == nQuestions) {
+                                readCount = -1;
+                            }
+                            else {
+                                readCount = 0;
+                            }
                             tempQC = new QuestionContent();
                             break;
                         case -1:
                             questionViewModel.setAllPreloadedQCs(readQC);
                             questionViewModel.setQuestionsSent(true);
+                        case -2:
+                            nQuestions = ByteBuffer.wrap(readBuf).getInt();
                     }
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, readBuf.length);
@@ -447,7 +461,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                 mmOutStream.write(bytes);
 
                 // Share the sent message with the UI activity.
-                handler.obtainMessage(MESSAGE_WRITE, type, 0, bytes).sendToTarget();
+                handler.obtainMessage(MESSAGE_WRITE, type, 1, bytes).sendToTarget();
             } catch (IOException e) {
                 Log.e("ConnectedThread", "Error occurred when sending data", e);
 
