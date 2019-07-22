@@ -322,7 +322,7 @@ public class QuestionFragment extends Fragment {
     private void populateQuestion(QuestionContent questionContent) {
         Log.e("Question: ", "" + currentQuestionCount);
 
-        if (questionContent != null && questionContent.imageBlob != null) {
+        if (questionContent != null/* && questionContent.imageBlob != null*/) {
             ByteArrayInputStream bis = new ByteArrayInputStream(questionContent.imageBlob);
             Bitmap bp = BitmapFactory.decodeStream(bis); //decode stream to a bitmap image
             personImageView.setImageBitmap(bp);

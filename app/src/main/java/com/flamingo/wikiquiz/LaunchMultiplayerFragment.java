@@ -1,6 +1,7 @@
 package com.flamingo.wikiquiz;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -106,9 +107,13 @@ public class LaunchMultiplayerFragment extends Fragment {
                         mConnectThread.run();
                     }
                 }.start();
-//                while(!questionViewModel.getQuestionsSent()) {
-//                    // Stay in this loop until server has sent all the question content
-//                }
+
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isBluetooth", true);
                 bundle.putBoolean("isClient", true);
@@ -154,8 +159,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                                 message[index] = b;
                                 index++;
                             }
-                        }
-                        else {
+                        } else {
                             ByteBuffer bb = ByteBuffer.allocate(4);
                             bb.putInt(1);
                             for (byte b : bb.array()) {
@@ -223,7 +227,6 @@ public class LaunchMultiplayerFragment extends Fragment {
         });
 
 
-
         return view;
     }
 
@@ -250,6 +253,7 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
     };
 
+    @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -265,25 +269,23 @@ public class LaunchMultiplayerFragment extends Fragment {
                         index++;
                     }
                     nQuestions = ByteBuffer.wrap(integer).getInt();
+                    questionViewModel.setNUM_TOTAL_QUESTIONS(nQuestions);
                     int qcParamIndex = 0;
                     int nAnswers = 0;
-                    tempQC = new QuestionContent();
                     for (int i = index; i < msg.arg1; i++) {
-                        integer[i%4] = readBuf[index];
+                        integer[i % 4] = readBuf[index];
                         index++;
                         if (i % 4 == 3) {
                             if (qcParamIndex == 0) {
                                 tempQC.setQuestionString(ByteBuffer.wrap(integer).getInt());
                                 qcParamIndex = 1;
-                            }
-                            else if (qcParamIndex == 1) {
+                            } else if (qcParamIndex == 1) {
                                 Infobox infobox = questionViewModel.getInfoboxById(
                                         ByteBuffer.wrap(integer).getInt());
                                 tempQC.infoboxes.add(infobox);
                                 if (tempQC.questionString.equals("What is this person's name?")) {
                                     tempQC.answers.add(infobox.getName());
-                                }
-                                else {
+                                } else {
                                     tempQC.answers.add(Integer.toString(infobox.getBirthYear()));
                                 }
                                 nAnswers++;
@@ -291,13 +293,18 @@ public class LaunchMultiplayerFragment extends Fragment {
                                     nAnswers = 0;
                                     qcParamIndex = 2;
                                 }
-                            }
-                            else {
+                            } else {
                                 tempQC.setCorrectAnswer(ByteBuffer.wrap(integer).getInt());
+                                tempQC.imageBlob = tempQC.infoboxes.get(tempQC.correctAnswer)
+                                        .getImageBlob();
                                 readQC.add(tempQC);
                                 qcParamIndex = 0;
+                                tempQC = new QuestionContent();
+                                tempQC.answers = new ArrayList<String>();
+                                tempQC.infoboxes = new ArrayList<Infobox>();
                             }
                         }
+
                     }
                     questionViewModel.setAllPreloadedQCs(readQC);
                     questionViewModel.setQuestionsSent(true);
@@ -338,7 +345,7 @@ public class LaunchMultiplayerFragment extends Fragment {
 //                            nQuestions = ByteBuffer.wrap(readBuf).getInt();
 //                            readCount = 1;
 //                    }
-                    // construct a string from the valid bytes in the buffer
+                // construct a string from the valid bytes in the buffer
 
 //                    Toast.makeText(getActivity(), "Received Message: " + readMessage,
 //                            Toast.LENGTH_SHORT).show();
@@ -389,7 +396,7 @@ public class LaunchMultiplayerFragment extends Fragment {
         //Cancel accept thread because we only want to connect to one device
         if (mAcceptThread != null) {
             mAcceptThread.cancel();
-            mAcceptThread= null;
+            mAcceptThread = null;
         }
 
         // Start the thread to manage the connection and perform transmissions
@@ -524,24 +531,23 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         public void run() {
             mmBuffer = new byte[1024];
-            int numBytes; // bytes returned from read()
+//            final int numBytes; // bytes returned from read()
 
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
+                // Read from the InputStream.
+                int numBytes = 0;
                 try {
-                    // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
-                    // Send the obtained bytes to the UI activity.
-                    Message readMsg = handler.obtainMessage(
-                            MESSAGE_READ, numBytes, -1,
-                            mmBuffer);
-                    readMsg.sendToTarget();
                 } catch (IOException e) {
-                    Log.d("ConnectedThread", "Input stream was disconnected", e);
-                    break;
+                    e.printStackTrace();
                 }
+                // Send the obtained bytes to the UI activity.
+                Message readMsg = handler.obtainMessage(
+                        MESSAGE_READ, numBytes, -1,
+                        mmBuffer);
+                readMsg.sendToTarget();
             }
-            int x = 0;
         }
 
         // Call this from the main activity to send data to the remote device.

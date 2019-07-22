@@ -18,6 +18,7 @@ public class QuestionViewModel extends AndroidViewModel {
     private List<Infobox> _allInfoBoxes;
     private List<Infobox> _infoboxesInCategory;
     private int numberOfQuestionTypes = 2;
+    private int NUM_TOTAL_QUESTIONS;
     private List<QuestionContent> _preloadedQuestionContentList;
     private boolean _questionsSent;
     private Application _application;
@@ -171,5 +172,9 @@ public class QuestionViewModel extends AndroidViewModel {
 
     public void setQuestionsSent(boolean sent) {
         _questionsSent = sent;
+    }
+
+    public void setNUM_TOTAL_QUESTIONS(int n) {
+        NUM_TOTAL_QUESTIONS = n;
     }
 }
