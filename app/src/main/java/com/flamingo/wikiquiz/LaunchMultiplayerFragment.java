@@ -347,6 +347,8 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
 
         // Start the thread to manage the connection and perform transmissions
+        App app = (App) getActivity().getApplication();
+        app.setBTSocket(socket);
         mConnectedThread = new ConnectedThread(socket);
         mConnectedThread.start();
     }
