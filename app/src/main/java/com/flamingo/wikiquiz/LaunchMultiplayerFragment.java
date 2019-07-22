@@ -129,20 +129,58 @@ public class LaunchMultiplayerFragment extends Fragment {
                     Toast.makeText(getContext(), "Device now discoverable", Toast.LENGTH_SHORT).show();
                     mAcceptThread = new AcceptThread();
                     mAcceptThread.run();
-                    String sendMessage = "sent!";
-                    byte[] send = sendMessage.getBytes();
-                    //mConnectedThread.write(send, 0, 0);
-                    questionViewModel.generatePreloadedQCs(3);
+                    nQuestions = 3;
+//                    String sendMessage = "sent!";
+//                    byte[] send = sendMessage.getBytes();
+                    //ByteBuffer bb = ByteBuffer.allocate(4);
+                    //bb.putInt(nQuestions);
+                    int size = nQuestions * 8 + 4;
+                    int index = 0;
+                    byte[] message = new byte[size];
+                    byte[] nQuestionByte = ByteBuffer.allocate(4).putInt(nQuestions).array();
+                    for (byte b : nQuestionByte) {
+                        message[index] = b;
+                        index++;
+                    }
+                    //mConnectedThread.write(nQuestionByte, 0);
+                    questionViewModel.generatePreloadedQCs(nQuestions);
                     for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
                         ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
                         questionContentArray = questionContent.getContentByteArray();
-                        for (ArrayList<byte[]> questionField : questionContentArray) {
-                            mConnectedThread.write(questionField.get(0), 0);
-                            mConnectedThread.write(questionField.get(1), 1);
-                            mConnectedThread.write(questionField.get(3), 3);
-
+                        if (questionContent.questionString.equals("What is this person's name?")) {
+                            ByteBuffer bb = ByteBuffer.allocate(4);
+                            bb.putInt(0);
+                            for (byte b : bb.array()) {
+                                message[index] = b;
+                                index++;
+                            }
                         }
+                        else {
+                            ByteBuffer bb = ByteBuffer.allocate(4);
+                            bb.putInt(1);
+                            for (byte b : bb.array()) {
+                                message[index] = b;
+                                index++;
+                            }
+                        }
+//                        for (byte b : questionContentArray.get(1).get(0)) {
+//                            message[index] = b;
+//                            index++;
+//                        }
+                        for (byte b : questionContentArray.get(3).get(0)) {
+                            message[index] = b;
+                            index++;
+                        }
+                        //mConnectedThread.write(message, 0);
+                        //mConnectedThread.write(questionContentArray.get(0).get(0), 0);
+//                        byte[] msg = ByteBuffer.allocate(4)
+//                                .putInt(questionContentArray.get(1).get(0).hashCode())
+//                                .array();
+                        //mConnectedThread.write(questionContentArray.get(1).get(0), 1);
+//                        mConnectedThread.write(msg, 1);
+//                        mConnectedThread.write(questionContentArray.get(3).get(0), 3);
                     }
+                    mConnectedThread.write(message, 0);
                     questionViewModel.setQuestionsSent(true);
 //                    mConnectedThread.write(send, -1, 0);
                     Bundle bundle = new Bundle();
@@ -206,8 +244,6 @@ public class LaunchMultiplayerFragment extends Fragment {
             }
         }
     };
-
-    //"test"
 
     private final Handler handler = new Handler() {
         @Override
