@@ -1,6 +1,7 @@
 package com.flamingo.wikiquiz;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -142,6 +143,9 @@ public class QuestionFragment extends Fragment {
 
         if (IS_CLIENT) {
             ArrayList<QuestionContent> hostQCs = new ArrayList<QuestionContent>();
+            App app = (App)getActivity().getApplication();
+            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
+            mConnectedThread.start();
             // TODO hostQCs assign here
             questionViewModel.setAllPreloadedQCs(hostQCs);
         } else {
@@ -152,7 +156,9 @@ public class QuestionFragment extends Fragment {
                 int questionIndex = 0;
                 for (ArrayList<byte[]> questionField : questionContentArray) {
                     App app = (App)getActivity().getApplication();
-                    ConnectedThread mConnectedThread = app.getBTConnectedThreadServer();
+//                    ConnectedThread mConnectedThread = app.getBTConnectedThreadServer();
+                    ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
+                    mConnectedThread.start();
                     mConnectedThread.write(questionField.get(0), 0, questionIndex);
                     mConnectedThread.write(questionField.get(1), 1, questionIndex);
                     mConnectedThread.write(questionField.get(3), 3, questionIndex);

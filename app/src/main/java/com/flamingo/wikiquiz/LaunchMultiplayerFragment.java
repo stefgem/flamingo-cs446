@@ -235,10 +235,11 @@ public class LaunchMultiplayerFragment extends Fragment {
                 if (socket != null) {
                     synchronized (LaunchMultiplayerFragment.this) {
                         manageMyConnectedSocket(socket, socket.getRemoteDevice());
-                        mConnectedThread = new ConnectedThread(socket);
+//                        mConnectedThread = new ConnectedThread(socket);
                         App app = (App)getActivity().getApplication();
-                        app.setBTConnectedThreadServer(mConnectedThread);
-                        app.getBTConnectedThreadServer().start();
+                        app.setBTSocket(socket);
+//                        app.setBTConnectedThreadServer(mConnectedThread);
+//                        app.getBTConnectedThreadServer().start();
                         cancel();
                         break;
                     }
@@ -286,10 +287,12 @@ public class LaunchMultiplayerFragment extends Fragment {
                 mConnectThread = null;
             }
             manageMyConnectedSocket(mmSocket, mmDevice);
-            ConnectedThread thread = new ConnectedThread(mmSocket);
+
+//            ConnectedThread thread = new ConnectedThread(mmSocket);
             App app = (App)getActivity().getApplication();
-            app.setBTConnectedThreadClient(thread);
-            app.getBTConnectedThreadClient().start();
+            app.setBTSocket(mmSocket);
+//            app.setBTConnectedThreadClient(thread);
+//            app.getBTConnectedThreadClient().start();
         }
 
         public void cancel() {

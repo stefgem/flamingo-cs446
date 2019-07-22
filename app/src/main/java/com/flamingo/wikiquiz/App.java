@@ -12,6 +12,7 @@ public class App extends Application {
 
     private ConnectedThread _BTConnectedThreadClient;
     private ConnectedThread _BTConnectedThreadServer;
+    private BluetoothSocket _socket;
 
     @Override
     public void onCreate() {
@@ -35,5 +36,13 @@ public class App extends Application {
 
     public void setBTConnectedThreadServer(ConnectedThread thread) {
         _BTConnectedThreadServer = thread;
+    }
+
+    public BluetoothSocket getBTSocket() {
+        return _socket;
+    }
+
+    public void setBTSocket(BluetoothSocket socket) {
+        _socket = socket;
     }
 }
