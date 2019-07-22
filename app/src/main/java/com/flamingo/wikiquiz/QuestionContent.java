@@ -63,11 +63,24 @@ QuestionContent {
         imageBlob = imageBytes;
     }
 
-    public void setQuestionString(byte[] questionBytes) {
-        questionString = Arrays.toString(questionBytes);
+    public void setQuestionString(byte[] questionBytes, int length) {
+        questionString = new String(questionBytes, 0, length);
+    }
+
+    public void setQuestionString(int i) {
+        if (i == 0) {
+            questionString = "What is this person's name?";
+        }
+        else {
+            questionString = "In what year was this person born?";
+        }
     }
 
     public void setCorrectAnswer(byte[] correctAnswerBytes) {
         correctAnswer = ByteBuffer.wrap(correctAnswerBytes).getInt();
+    }
+
+    public void setCorrectAnswer(int i) {
+        correctAnswer = i;
     }
 }

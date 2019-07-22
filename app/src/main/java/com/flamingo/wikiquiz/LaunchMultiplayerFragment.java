@@ -76,7 +76,7 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         readQC = new ArrayList<>();
         tempQC = new QuestionContent();
-        readCount = 0;
+        readCount = -2;
         nQuestions = 0;
 
         ListView devicesListView = view.findViewById(R.id.devicesListView);
@@ -140,6 +140,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                             mConnectedThread.write(questionField.get(0), 0);
                             mConnectedThread.write(questionField.get(1), 1);
                             mConnectedThread.write(questionField.get(3), 3);
+
                         }
                     }
                     questionViewModel.setQuestionsSent(true);
@@ -206,50 +207,78 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
     };
 
+    //"test"
+
     private final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
-                    QuestionContent qc;
-                    switch (readCount) {
-                        case 0:
-//                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-//                            qc.setImageBlob(readBuf);
-//                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
-                            tempQC.setImageBlob(readBuf);
-                            readCount++;
-                            break;
-                        case 1:
-//                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-//                            qc.setQuestionString(readBuf);
-//                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
-                            tempQC.setQuestionString(readBuf);
-                            readCount++;
-                            break;
-                        case 3:
-//                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-//                            qc.setCorrectAnswer(readBuf);
-//                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
-                            tempQC.setCorrectAnswer(readBuf);
-                            readQC.add(tempQC);
-                            if (readQC.size() == nQuestions) {
-                                readCount = -1;
+                    //String readMessage = new String(readBuf, 0, msg.arg1);
+                    //QuestionContent qc;
+                    int index = 0;
+                    byte[] integer = new byte[4];
+                    for (int i = 0; i < 4; i++) {
+                        integer[i] = readBuf[index];
+                        index++;
+                    }
+                    nQuestions = ByteBuffer.wrap(integer).getInt();
+                    int qcParamIndex = 0;
+                    tempQC = new QuestionContent();
+                    for (int i = index; i < msg.arg1; i++) {
+                        integer[i%4] = readBuf[index];
+                        index++;
+                        if (i % 4 == 3) {
+                            if (qcParamIndex == 0) {
+                                tempQC.setQuestionString(ByteBuffer.wrap(integer).getInt());
+                                qcParamIndex = 1;
                             }
                             else {
-                                readCount = 0;
+                                tempQC.setCorrectAnswer(ByteBuffer.wrap(integer).getInt());
+                                readQC.add(tempQC);
+                                qcParamIndex = 0;
                             }
-                            tempQC = new QuestionContent();
-                            break;
-                        case -1:
-                            questionViewModel.setAllPreloadedQCs(readQC);
-                            questionViewModel.setQuestionsSent(true);
-                        case -2:
-                            nQuestions = ByteBuffer.wrap(readBuf).getInt();
+                        }
                     }
+//                    switch (readCount) {
+//                        case 0:
+////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+////                            qc.setImageBlob(readBuf);
+////                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+//                            tempQC.setImageBlob(readBuf);
+//                            readCount++;
+//                            break;
+//                        case 1:
+////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+////                            qc.setQuestionString(readBuf);
+////                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+//                            tempQC.setQuestionString(readBuf, msg.arg1);
+//                            readCount = 3;
+//                            break;
+//                        case 3:
+////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
+////                            qc.setCorrectAnswer(readBuf);
+////                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
+//                            tempQC.setCorrectAnswer(readBuf);
+//                            readQC.add(tempQC);
+//                            if (readQC.size() == nQuestions) {
+//                                readCount = -1;
+//                            }
+//                            else {
+//                                readCount = 1;
+//                            }
+//                            tempQC = new QuestionContent();
+//                            break;
+//                        case -1:
+//                            questionViewModel.setAllPreloadedQCs(readQC);
+//                            questionViewModel.setQuestionsSent(true);
+//                        case -2:
+//                            nQuestions = ByteBuffer.wrap(readBuf).getInt();
+//                            readCount = 1;
+//                    }
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, readBuf.length);
+
 //                    Toast.makeText(getActivity(), "Received Message: " + readMessage,
 //                            Toast.LENGTH_SHORT).show();
                     break;
