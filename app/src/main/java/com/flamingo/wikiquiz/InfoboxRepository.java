@@ -132,7 +132,7 @@ public class InfoboxRepository {
                 "John_F._Kennedy", "George_W._Bush", "Nelson_Mandela",
                 "Ronald_Reagan", "Winston_Churchill", "Bill_Clinton", "George_Washington",
                 "Diana,_Princess_of_Wales", "Mahatma_Gandhi", "Franklin_D._Roosevelt", "Charles,_Prince_of_Wales",
-                "Prince Philip,_Duke_of_Edinburgh", "George_H._W._Bush", "Osama_bin_Laden",
+                "Prince Philip,_Duke_of_Edinburgh", "George_H._W._Bush",
                 "Che_Guevara", "Richard_Nixon", "Vladimir_Putin", "Theodore_Roosevelt",
                 "Princess_Margaret,_Countess_of_Snowdon", "George_VI", "Thomas_Jefferson", "Jimmy_Carter"};
 
