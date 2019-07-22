@@ -143,7 +143,7 @@ public class InfoboxRepository {
     }
 
     private void populateDbMillenniums() {
-        String[] millenniums_urls = {"Willow_Smith", "Billie_Eilish", "Millie_Bobby_Brown", "Maddie_Ziegler",
+        String[] millenniums_urls = {"Willow_Smith", "Billie_Eilish", "Millie_Bobby_Brown",
                 "Lil_Pump", "Prince_George_of_Cambridge", "Noah_Cyrus", "Lady_Louise_Windsor",
                 "Jackie_Evancho", "Mackenzie_Foy", "Finn_Wolfhard",
                 "Gaten_Matarazzo", "JoJo_Siwa", "Jacob_Tremblay", "Zion_Williamson", "James,_Viscount_Severn",

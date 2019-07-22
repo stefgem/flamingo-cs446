@@ -39,7 +39,7 @@ public class QuestionFragment extends Fragment {
     private static final String NEXT_STRING = "Next Question";
     private static final String LAST_STRING = "Done";
 
-    private static int NUM_TOTAL_QUESTIONS = 3;
+    private static int NUM_TOTAL_QUESTIONS = 7;
     private static boolean IS_BLUETOOTH_SESSION;
     private static boolean IS_CLIENT;
 

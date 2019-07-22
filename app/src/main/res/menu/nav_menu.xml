@@ -13,9 +13,9 @@
         android:id="@+id/StudyAddFragment"
         android:icon="@drawable/ic_notebook_24px"
         android:title="Review" />
-    <item
+    <!--<item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings_24px"
-        android:title="Settings" />
+        android:title="Settings" /> -->
 
 </menu>
