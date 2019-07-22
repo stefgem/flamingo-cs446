@@ -10,7 +10,8 @@ public class App extends Application {
 
     static final long MAX_SIZE = 524288000L; // 500 Mb
 
-    private BluetoothSocket _BTSocket;
+    private ConnectedThread _BTConnectedThreadClient;
+    private ConnectedThread _BTConnectedThreadServer;
 
     @Override
     public void onCreate() {
@@ -20,11 +21,19 @@ public class App extends Application {
 
     }
 
-    public BluetoothSocket getBTSocket() {
-        return _BTSocket;
+    public ConnectedThread getBTConnectedThreadClient() {
+        return _BTConnectedThreadClient;
     }
 
-    public void setBTSocket(BluetoothSocket socket) {
-        _BTSocket = socket;
+    public void setBTConnectedThreadClient(ConnectedThread thread) {
+        _BTConnectedThreadClient = thread;
+    }
+
+    public ConnectedThread getBTConnectedThreadServer() {
+        return _BTConnectedThreadServer;
+    }
+
+    public void setBTConnectedThreadServer(ConnectedThread thread) {
+        _BTConnectedThreadServer = thread;
     }
 }

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.ByteArrayInputStream;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,12 +141,23 @@ public class QuestionFragment extends Fragment {
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
         if (IS_CLIENT) {
-            List<QuestionContent> hostQCs = new ArrayList<>();
+            ArrayList<QuestionContent> hostQCs = new ArrayList<QuestionContent>();
             // TODO hostQCs assign here
             questionViewModel.setAllPreloadedQCs(hostQCs);
         } else {
             questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
-
+            for (QuestionContent questionContent : questionViewModel.getAllPreloadedQCs()) {
+                ArrayList<ArrayList<byte[]>> questionContentArray = new ArrayList<>();
+                questionContentArray = questionContent.getContentByteArray();
+                int questionIndex = 0;
+                for (ArrayList<byte[]> questionField : questionContentArray) {
+                    App app = (App)getActivity().getApplication();
+                    ConnectedThread mConnectedThread = app.getBTConnectedThreadServer();
+                    mConnectedThread.write(questionField.get(0), 0, questionIndex);
+                    mConnectedThread.write(questionField.get(1), 1, questionIndex);
+                    mConnectedThread.write(questionField.get(3), 3, questionIndex);
+                }
+            }
         }
 
         // START OF DEBUG TEST

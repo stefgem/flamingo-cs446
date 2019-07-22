@@ -46,10 +46,6 @@ public class LaunchMultiplayerFragment extends Fragment {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
 
-    public static final int MESSAGE_READ = 1;
-    public static final int MESSAGE_WRITE = 2;
-    public static final int MESSAGE_TOAST = 3;
-
     public LaunchMultiplayerFragment() {
         // Required empty constructor
     }
@@ -175,34 +171,6 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
     };
 
-    private final Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    Toast.makeText(getActivity(), "Received Message: " + readMessage,
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                case MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    Toast.makeText(getActivity(), "Sent Message: " + writeMessage,
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                case MESSAGE_TOAST:
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), msg.getData().getString("failed"),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-            }
-        }
-    };
-
     public boolean checkEnableBluetooth() {
         int REQUEST_ENABLE_BT = 1234;
         if (bluetoothAdapter == null) {
@@ -237,8 +205,6 @@ public class LaunchMultiplayerFragment extends Fragment {
         }
 
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket);
-        mConnectedThread.start();
     }
 
     private class AcceptThread extends Thread {
@@ -269,6 +235,10 @@ public class LaunchMultiplayerFragment extends Fragment {
                 if (socket != null) {
                     synchronized (LaunchMultiplayerFragment.this) {
                         manageMyConnectedSocket(socket, socket.getRemoteDevice());
+                        mConnectedThread = new ConnectedThread(socket);
+                        App app = (App)getActivity().getApplication();
+                        app.setBTConnectedThreadServer(mConnectedThread);
+                        app.getBTConnectedThreadServer().start();
                         cancel();
                         break;
                     }
@@ -299,8 +269,6 @@ public class LaunchMultiplayerFragment extends Fragment {
                 Log.e("ConnectThread", "Socket's create() method failed", e);
             }
             mmSocket = tmp;
-            App app = (App)getActivity().getApplication();
-            app.setBTSocket(mmSocket);
         }
 
         public void run() {
@@ -318,6 +286,10 @@ public class LaunchMultiplayerFragment extends Fragment {
                 mConnectThread = null;
             }
             manageMyConnectedSocket(mmSocket, mmDevice);
+            ConnectedThread thread = new ConnectedThread(mmSocket);
+            App app = (App)getActivity().getApplication();
+            app.setBTConnectedThreadClient(thread);
+            app.getBTConnectedThreadClient().start();
         }
 
         public void cancel() {
@@ -325,86 +297,6 @@ public class LaunchMultiplayerFragment extends Fragment {
                 mmSocket.close();
             } catch (IOException closeException) {
                 Log.e("ConnectThread", "Could not close the client socket", closeException);
-            }
-        }
-    }
-
-    private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-        private byte[] mmBuffer; // mmBuffer store for the stream
-
-        public ConnectedThread(BluetoothSocket socket) {
-            mmSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            // Get the input and output streams; using temp objects because
-            // member streams are final.
-            try {
-                tmpIn = socket.getInputStream();
-            } catch (IOException e) {
-                Log.e("ConnectedThread", "Error occurred when creating input stream", e);
-            }
-            try {
-                tmpOut = socket.getOutputStream();
-            } catch (IOException e) {
-                Log.e("ConnectedThread", "Error occurred when creating output stream", e);
-            }
-
-            mmInStream = tmpIn;
-            mmOutStream = tmpOut;
-        }
-
-        public void run() {
-            mmBuffer = new byte[1024];
-            int numBytes; // bytes returned from read()
-
-            // Keep listening to the InputStream until an exception occurs.
-            while (true) {
-                try {
-                    // Read from the InputStream.
-                    numBytes = mmInStream.read(mmBuffer);
-                    // Send the obtained bytes to the UI activity.
-                    Message readMsg = handler.obtainMessage(
-                            MESSAGE_READ, numBytes, -1,
-                            mmBuffer);
-                    readMsg.sendToTarget();
-                } catch (IOException e) {
-                    Log.d("ConnectedThread", "Input stream was disconnected", e);
-                    break;
-                }
-            }
-        }
-
-        // Call this from the main activity to send data to the remote device.
-        public void write(byte[] bytes) {
-            try {
-                mmOutStream.write(bytes);
-
-                // Share the sent message with the UI activity.
-                handler.obtainMessage(MESSAGE_WRITE, -1, -1, bytes).sendToTarget();
-            } catch (IOException e) {
-                Log.e("ConnectedThread", "Error occurred when sending data", e);
-
-                // Send a failure message back to the activity.
-                Message writeErrorMsg =
-                        handler.obtainMessage(MESSAGE_TOAST);
-                Bundle bundle = new Bundle();
-                bundle.putString("failed",
-                        "Couldn't send data to the other device");
-                writeErrorMsg.setData(bundle);
-                handler.sendMessage(writeErrorMsg);
-            }
-        }
-
-        // Call this method from the main activity to shut down the connection.
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e("ConnectedThread", "Could not close the connect socket", e);
             }
         }
     }
