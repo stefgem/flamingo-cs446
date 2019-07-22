@@ -101,7 +101,6 @@ public class QuestionViewModel extends AndroidViewModel {
 
     public void generatePreloadedQCs(int numWanted) {
         _preloadedQuestionContentList.clear();
-
         for (int i = 0; i < numWanted; i++) {
             QuestionContent questionContent = generateQuestionContent();
             _preloadedQuestionContentList.add(questionContent);
@@ -124,8 +123,7 @@ public class QuestionViewModel extends AndroidViewModel {
     }
 
     public void fetchDataFromWikipedia() {
-
-
+        _allInfoBoxes.clear();
         _repository.fetchDataFromWikipedia();
         _allInfoBoxes = _repository.getAllInfoboxes();
     }
@@ -142,9 +140,7 @@ public class QuestionViewModel extends AndroidViewModel {
 
     @Nullable // if the id doesn't match an entry, this method will return null
     public Infobox getInfoboxById(int id) {
-
         return _repository.getInfoboxById(id);
-
     }
 
     public LiveData<List<Integer>> getInfoboxIdList() {
