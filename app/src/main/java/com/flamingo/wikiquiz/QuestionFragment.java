@@ -141,18 +141,19 @@ public class QuestionFragment extends Fragment {
 
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
-        if (IS_CLIENT) {
-            while (!questionViewModel.getQuestionsSent()) {
-                // Stay in this loop until server has sent all the question content
+        bluetoothCorrectLog = new ArrayList<>();
+        bluetoothTimestampLog = new ArrayList<>();
+        bluetoothHintLog = new ArrayList<>();
+        if (IS_BLUETOOTH_SESSION) {
+            if (IS_CLIENT) {
+                while (!questionViewModel.getQuestionsSent()) {
+                    // Stay in this loop until server has sent all the question content
+                }
             }
-            //ArrayList<QuestionContent> hostQCs = new ArrayList<QuestionContent>();
-//            App app = (App)getActivity().getApplication();
-//            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
-//            mConnectedThread.start();
-            // TODO hostQCs assign here
-            //questionViewModel.setAllPreloadedQCs(hostQCs);
-        } else {
-            //questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+        }
+        else {
+            questionViewModel.generatePreloadedQCs(NUM_TOTAL_QUESTIONS);
+        }
 //            App app = (App)getActivity().getApplication();
 //            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
 //            mConnectedThread.start();
@@ -166,7 +167,6 @@ public class QuestionFragment extends Fragment {
 //                    mConnectedThread.write(questionField.get(3), 3, questionIndex);
 //                }
 //            }
-        }
 
         // START OF DEBUG TEST
 //        QuestionContent testQC = new QuestionContent();
@@ -183,10 +183,6 @@ public class QuestionFragment extends Fragment {
 //
 //        questionViewModel.setAllPreloadedQCs(testQCList);
         // END OF DEBUG TEST
-
-        bluetoothCorrectLog = new ArrayList<>();
-        bluetoothTimestampLog = new ArrayList<>();
-        bluetoothHintLog = new ArrayList<>();
 
         gotoNextQuestion();
 
@@ -260,6 +256,7 @@ public class QuestionFragment extends Fragment {
 
             clearSelection();
             //QuestionContent questionContent = questionViewModel.generateQuestionContent();
+
             QuestionContent questionContent =
                     questionViewModel.getPreloadedAtIndex(currentQuestionCount);
             populateQuestion(questionContent);
@@ -268,6 +265,8 @@ public class QuestionFragment extends Fragment {
             handleEndOfQuiz();
         }
     }
+
+
 
     private void advanceProgressBar() {
         float percent = (float) (currentQuestionCount) / ((float) NUM_TOTAL_QUESTIONS);

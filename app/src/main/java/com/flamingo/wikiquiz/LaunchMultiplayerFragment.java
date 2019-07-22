@@ -299,6 +299,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                             }
                         }
                     }
+                    questionViewModel.setAllPreloadedQCs(readQC);
                     questionViewModel.setQuestionsSent(true);
                     break;
 //                    switch (readCount) {
