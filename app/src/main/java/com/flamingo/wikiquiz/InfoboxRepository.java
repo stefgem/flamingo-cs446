@@ -22,13 +22,11 @@ import java.util.List;
 public class InfoboxRepository {
 
     private InfoboxDao _infoboxDao;
-    private InfoboxRoomDatabase _DB;
     private List<Infobox> _allInfoboxes;
     private LiveData<List<Integer>> _infoboxIdList;
 
     InfoboxRepository(Application application) {
         InfoboxRoomDatabase db = InfoboxRoomDatabase.getDatabase(application);
-        _DB = db;
         _infoboxDao = db.infoboxDao();
         _allInfoboxes = _infoboxDao.getAllInfoboxes();
         _infoboxIdList = _infoboxDao.getInfoboxIdList();
@@ -130,7 +128,7 @@ public class InfoboxRepository {
     }
 
     private void populateDbPoliticians() {
-        String[] politicians_urls =  {"Donald_Trump", "Barack_Obama", "Adolf_Hitler", "Elizabeth_II","Abraham_Lincoln",
+        String[] politicians_urls =  {"Donald_Trump", "Barack_Obama", "Elizabeth_II","Abraham_Lincoln",
                 "John_F._Kennedy", "Queen_Victoria", "George_W._Bush", "Henry_VIII_of_England", "Nelson_Mandela",
                 "Ronald_Reagan", "Winston_Churchill", "Bill_Clinton", "George_Washington", "Elizabeth_I",
                 "Diana,_Princess_of_Wales", "Mahatma_Gandhi", "Franklin_D._Roosevelt", "Charles,_Prince_of_Wales",

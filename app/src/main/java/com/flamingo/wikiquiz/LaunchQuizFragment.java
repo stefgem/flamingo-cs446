@@ -32,6 +32,7 @@ public class LaunchQuizFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putBoolean("isBluetooth", false);
         Button quizBtn = view.findViewById(R.id.launchQuizButton);
+
         quizBtn.setOnClickListener(Navigation.createNavigateOnClickListener(
                 R.id.action_launchQuizFragment_to_questionFragment, bundle));
 
@@ -44,8 +45,7 @@ public class LaunchQuizFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 questionViewModel.fetchDataFromWikipedia();
-                String toastMsg = "Database load initiated. \n Due to sync issues, the data may not display" +
-                        " until the app activity is killed and relaunched.";
+                String toastMsg = "Database load initiated.";
                 Toast.makeText(getContext(),toastMsg,Toast.LENGTH_LONG ).show();
             }
         });

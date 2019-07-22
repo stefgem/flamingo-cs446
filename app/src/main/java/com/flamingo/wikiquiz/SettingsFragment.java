@@ -36,8 +36,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 questionViewModel.deleteAllDatabaseRows();
-                String toastMsg = "Database nuke initiated. \n Due to sync issues," +
-                        " deletion may not be noticed until the app activity is killed and relaunched.";
+                String toastMsg = "Database wipe initiatied.";
                 Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
             }
         });
