@@ -11,7 +11,7 @@ import java.util.List;
 @Dao
 public interface InfoboxDao {
 
-    @Query("SELECT * FROM infobox_table ORDER BY rowId ASC")
+    @Query("SELECT * FROM infobox_table ORDER BY _name ASC")
     List<Infobox> getAllInfoboxes();
 
     @Query("SELECT * FROM infobox_table WHERE category = :category")

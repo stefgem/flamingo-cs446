@@ -15,6 +15,8 @@ QuestionContent {
 
     public QuestionContent() {
         // Empty constructor
+        answers = new ArrayList<String>(4);
+        infoboxes = new ArrayList<Infobox>(4);
     }
     public QuestionContent(ArrayList<ArrayList<byte[]>> questionContentArrayList) {
         // Inner array only has one element so second get with index 0

@@ -35,6 +35,7 @@ public class InfoboxRepository {
         int i = 0;
         for (Infobox ib : _allInfoboxes) {
             ib.setRowId(i);
+            i++;
         }
         _infoboxIdList = _infoboxDao.getInfoboxIdList();
     }
@@ -44,6 +45,7 @@ public class InfoboxRepository {
         int i = 0;
         for (Infobox ib : _allInfoboxes) {
             ib.setRowId(i);
+            i++;
         }
     }
 

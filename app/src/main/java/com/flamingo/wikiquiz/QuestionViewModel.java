@@ -57,6 +57,7 @@ public class QuestionViewModel extends AndroidViewModel {
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
                 qc.answers.set(qc.correctAnswer, questionInfobox.getName());
+                qc.infoboxes = new ArrayList<Infobox>(Collections.nCopies(4, questionInfobox));
                 qc.infoboxes.set(qc.correctAnswer, questionInfobox);
                 ArrayList<Integer> otherAnswers = new ArrayList<>();
                 otherAnswers.add(questionInfoboxIndex);
@@ -82,6 +83,7 @@ public class QuestionViewModel extends AndroidViewModel {
                 qc.answers = new ArrayList<String>(Collections.nCopies(4, ""));
                 qc.correctAnswer = new Random().nextInt(4);
                 qc.answers.set(qc.correctAnswer, Integer.toString(questionInfobox.getBirthYear()));
+                qc.infoboxes = new ArrayList<Infobox>(Collections.nCopies(4, questionInfobox));
                 qc.infoboxes.set(qc.correctAnswer, questionInfobox);
                 ArrayList<String> otherAnswers = new ArrayList<>();
                 otherAnswers.add(Integer.toString(questionInfobox.getBirthYear()));
