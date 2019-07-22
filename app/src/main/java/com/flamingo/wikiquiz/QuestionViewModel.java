@@ -177,4 +177,8 @@ public class QuestionViewModel extends AndroidViewModel {
     public void setNUM_TOTAL_QUESTIONS(int n) {
         NUM_TOTAL_QUESTIONS = n;
     }
+
+    public int getNUM_TOTAL_QUESTIONS() {
+        return NUM_TOTAL_QUESTIONS;
+    }
 }

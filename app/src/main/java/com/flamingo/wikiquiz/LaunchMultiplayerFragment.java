@@ -48,7 +48,6 @@ public class LaunchMultiplayerFragment extends Fragment {
     private QuestionViewModel questionViewModel;
     private ArrayList<QuestionContent> readQC;
     private QuestionContent tempQC;
-    private int readCount;
     private int nQuestions;
 
     private AcceptThread mAcceptThread;
@@ -77,7 +76,6 @@ public class LaunchMultiplayerFragment extends Fragment {
 
         readQC = new ArrayList<>();
         tempQC = new QuestionContent();
-        readCount = -2;
         nQuestions = 0;
 
         ListView devicesListView = view.findViewById(R.id.devicesListView);
@@ -114,6 +112,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                     e.printStackTrace();
                 }
 
+                mConnectedThread.cancel();
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isBluetooth", true);
                 bundle.putBoolean("isClient", true);
@@ -180,17 +179,10 @@ public class LaunchMultiplayerFragment extends Fragment {
                             message[index] = b;
                             index++;
                         }
-                        //mConnectedThread.write(message, 0);
-                        //mConnectedThread.write(questionContentArray.get(0).get(0), 0);
-//                        byte[] msg = ByteBuffer.allocate(4)
-//                                .putInt(questionContentArray.get(1).get(0).hashCode())
-//                                .array();
-                        //mConnectedThread.write(questionContentArray.get(1).get(0), 1);
-//                        mConnectedThread.write(msg, 1);
-//                        mConnectedThread.write(questionContentArray.get(3).get(0), 3);
                     }
                     mConnectedThread.write(message, 0);
                     questionViewModel.setQuestionsSent(true);
+                    mConnectedThread.cancel();
 //                    mConnectedThread.write(send, -1, 0);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isBluetooth", true);
@@ -309,58 +301,12 @@ public class LaunchMultiplayerFragment extends Fragment {
                     questionViewModel.setAllPreloadedQCs(readQC);
                     questionViewModel.setQuestionsSent(true);
                     break;
-//                    switch (readCount) {
-//                        case 0:
-////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-////                            qc.setImageBlob(readBuf);
-////                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
-//                            tempQC.setImageBlob(readBuf);
-//                            readCount++;
-//                            break;
-//                        case 1:
-////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-////                            qc.setQuestionString(readBuf);
-////                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
-//                            tempQC.setQuestionString(readBuf, msg.arg1);
-//                            readCount = 3;
-//                            break;
-//                        case 3:
-////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
-////                            qc.setCorrectAnswer(readBuf);
-////                            questionViewModel.setPreloadedAtIndex(msg.arg2, qc);
-//                            tempQC.setCorrectAnswer(readBuf);
-//                            readQC.add(tempQC);
-//                            if (readQC.size() == nQuestions) {
-//                                readCount = -1;
-//                            }
-//                            else {
-//                                readCount = 1;
-//                            }
-//                            tempQC = new QuestionContent();
-//                            break;
-//                        case -1:
-//                            questionViewModel.setAllPreloadedQCs(readQC);
-//                            questionViewModel.setQuestionsSent(true);
-//                        case -2:
-//                            nQuestions = ByteBuffer.wrap(readBuf).getInt();
-//                            readCount = 1;
-//                    }
-                // construct a string from the valid bytes in the buffer
-
-//                    Toast.makeText(getActivity(), "Received Message: " + readMessage,
-//                            Toast.LENGTH_SHORT).show();
                 case MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
                     Toast.makeText(getActivity(), "Sent Question Contents",
                             Toast.LENGTH_SHORT).show();
-                    break;
-                case MESSAGE_TOAST:
-//                    if (getActivity() != null) {
-//                        Toast.makeText(getActivity(), msg.getData().getString("failed"),
-//                                Toast.LENGTH_SHORT).show();
-//                    }
                     break;
             }
         }

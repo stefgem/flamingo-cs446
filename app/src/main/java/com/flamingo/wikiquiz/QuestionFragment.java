@@ -62,9 +62,9 @@ public class QuestionFragment extends Fragment {
     private QuestionViewModel questionViewModel;
     private List<Infobox> infoboxesList;
 
-    private List<Boolean> bluetoothCorrectLog;
-    private List<Timestamp> bluetoothTimestampLog;
-    private List<Boolean> bluetoothHintLog;
+    private boolean[] bluetoothCorrectLog;
+    private long[] bluetoothTimestampLog;
+    private boolean[] bluetoothHintLog;
 
 
     public QuestionFragment() {
@@ -141,9 +141,9 @@ public class QuestionFragment extends Fragment {
 
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
-        bluetoothCorrectLog = new ArrayList<>();
-        bluetoothTimestampLog = new ArrayList<>();
-        bluetoothHintLog = new ArrayList<>();
+        bluetoothCorrectLog = new boolean[questionViewModel.getNUM_TOTAL_QUESTIONS()];
+        bluetoothTimestampLog = new long[questionViewModel.getNUM_TOTAL_QUESTIONS()];
+        bluetoothHintLog = new boolean[questionViewModel.getNUM_TOTAL_QUESTIONS()];
         if (IS_BLUETOOTH_SESSION) {
             if (IS_CLIENT) {
                 while (!questionViewModel.getQuestionsSent()) {
@@ -204,21 +204,21 @@ public class QuestionFragment extends Fragment {
     private void submitAnswer() {
         String toastString;
         Timestamp timestamp = makeTimestamp();
-        bluetoothTimestampLog.add(timestamp);
+        bluetoothTimestampLog[currentQuestionCount] = timestamp.getTime();
         if (selectedAnswer == correctAnswer) {
             if (usedHint) {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE / 2;
-                bluetoothHintLog.add(true);
+                bluetoothHintLog[currentQuestionCount] = true;
             } else {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE;
-                bluetoothHintLog.add(false);
+                bluetoothHintLog[currentQuestionCount] = false;
             }
             scoreCountView.setText("Score: " + currentScore);
             toastString = "Correct!";
-            bluetoothCorrectLog.add(true);
+            bluetoothCorrectLog[currentQuestionCount] = true;
         } else {
             toastString = "Incorrect.";
-            bluetoothCorrectLog.add(false);
+            bluetoothCorrectLog[currentQuestionCount] = false;
         }
         toast.setText(toastString);
         toast.show();
@@ -359,7 +359,13 @@ public class QuestionFragment extends Fragment {
     }
 
     private void moveToMultiplayerDoneFragment() {
-
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isClient", true);
+        bundle.putBooleanArray("btCorrectLog", bluetoothCorrectLog);
+        bundle.putBooleanArray("btHintLog", bluetoothHintLog);
+        bundle.putLongArray("btTimestampLog", bluetoothTimestampLog);
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_questionFragment_to_endMultiplayerQuizFragment, bundle);
     }
 
     private Timestamp makeTimestamp() {
