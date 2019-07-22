@@ -154,8 +154,8 @@ public class LaunchMultiplayerFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        //getActivity().getApplicationContext().unregisterReceiver(receiver);
         super.onDestroy();
-        getActivity().getApplicationContext().unregisterReceiver(receiver);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
