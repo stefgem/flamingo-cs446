@@ -53,9 +53,9 @@ public class EndMultiplayerQuizFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         IS_CLIENT = getArguments().getBoolean("isClient");
-        playerBTCorrectLog = getArguments().getBooleanArray("bluetoothCorrectLog");
-        playerBTTimestampLog = getArguments().getLongArray("bluetoothTimestampLog");
-        playerBTHintLog = getArguments().getBooleanArray("bluetoothHintLog");
+        playerBTCorrectLog = getArguments().getBooleanArray("btCorrectLog");
+        playerBTTimestampLog = getArguments().getLongArray("btTimestampLog");
+        playerBTHintLog = getArguments().getBooleanArray("btHintLog");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_launch_multiplayer, container, false);
@@ -81,7 +81,7 @@ public class EndMultiplayerQuizFragment extends Fragment {
         mConnectedThread.start();
 
         // Send the play logs to the other device over bluetooth
-        byte[] message = new byte[questionViewModel.getNUM_TOTAL_QUESTIONS() * 4];
+        byte[] message = new byte[questionViewModel.getNUM_TOTAL_QUESTIONS() * 10];
         for (int i = 0; i < questionViewModel.getNUM_TOTAL_QUESTIONS(); i++) {
             if (playerBTCorrectLog[i]) {
                 message[i] = 1;
@@ -89,7 +89,7 @@ public class EndMultiplayerQuizFragment extends Fragment {
             else {
                 message[i] = 0;
             }
-            ByteBuffer bb = ByteBuffer.allocate(4);
+            ByteBuffer bb = ByteBuffer.allocate(8);
             bb.putLong(playerBTTimestampLog[i]);
             for (byte b : bb.array()) {
                 message[i] = b;
@@ -114,27 +114,23 @@ public class EndMultiplayerQuizFragment extends Fragment {
             switch (msg.what) {
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
-                    //String readMessage = new String(readBuf, 0, msg.arg1);
-                    //QuestionContent qc;
                     int index = 0;
+                    int timestampIndex = 0;
                     int paramIndex = 0;
-                    byte[] integer = new byte[2];
-//                    opponentBTCorrectLog;
-//                    opponentBTTimestampLog;
-//                    opponentBTHintLog;
+                    byte[] timestamp = new byte[8];
                     for (byte b : readBuf) {
                         if (paramIndex == 0) {
                             opponentBTCorrectLog[index] = b != 0;
                             paramIndex = 1;
                         }
                         else if (paramIndex == 1) {
-                            integer[0] = b;
-                            paramIndex = 2;
-                        }
-                        else if (paramIndex == 2) {
-                            integer[1] = b;
-                            opponentBTTimestampLog[index] = ByteBuffer.wrap(integer).getInt();
-                            paramIndex = 3;
+                            timestamp[timestampIndex] = b;
+                            timestampIndex++;
+                            if (timestampIndex == 8) {
+                                opponentBTTimestampLog[index] = ByteBuffer.wrap(timestamp).getInt();
+                                paramIndex = 2;
+                                timestampIndex = 0;
+                            }
                         }
                         else {
                             opponentBTHintLog[index] = b != 0;
