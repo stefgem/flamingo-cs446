@@ -123,7 +123,7 @@ public class QuestionViewModel extends AndroidViewModel {
     }
 
     public void fetchDataFromWikipedia() {
-        _allInfoBoxes.clear();
+        _repository.deleteAll();
         _repository.fetchDataFromWikipedia();
         _allInfoBoxes = _repository.getAllInfoboxes();
     }
