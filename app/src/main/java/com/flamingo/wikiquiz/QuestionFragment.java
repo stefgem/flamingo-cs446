@@ -204,21 +204,21 @@ public class QuestionFragment extends Fragment {
     private void submitAnswer() {
         String toastString;
         Timestamp timestamp = makeTimestamp();
-        bluetoothTimestampLog[currentQuestionCount] = timestamp.getTime();
+        bluetoothTimestampLog[currentQuestionCount - 1] = timestamp.getTime();
         if (selectedAnswer == correctAnswer) {
             if (usedHint) {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE / 2;
-                bluetoothHintLog[currentQuestionCount] = true;
+                bluetoothHintLog[currentQuestionCount - 1] = true;
             } else {
                 currentScore += CORRECT_ANSWER_POINTS_VALUE;
-                bluetoothHintLog[currentQuestionCount] = false;
+                bluetoothHintLog[currentQuestionCount - 1] = false;
             }
             scoreCountView.setText("Score: " + currentScore);
             toastString = "Correct!";
-            bluetoothCorrectLog[currentQuestionCount] = true;
+            bluetoothCorrectLog[currentQuestionCount - 1] = true;
         } else {
             toastString = "Incorrect.";
-            bluetoothCorrectLog[currentQuestionCount] = false;
+            bluetoothCorrectLog[currentQuestionCount - 1] = false;
         }
         toast.setText(toastString);
         toast.show();
@@ -343,10 +343,9 @@ public class QuestionFragment extends Fragment {
     private void handleEndOfQuiz() {
         if (!IS_BLUETOOTH_SESSION) {
             moveToEndQuizFragment();
-        } else if (IS_CLIENT) {
-            // TODO
-        } else {
-            // TODO
+        }
+        else {
+            moveToMultiplayerDoneFragment();
         }
     }
 

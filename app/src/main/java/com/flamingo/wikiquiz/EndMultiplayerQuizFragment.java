@@ -102,6 +102,7 @@ public class EndMultiplayerQuizFragment extends Fragment {
                 message[i] = 0;
             }
         }
+        mConnectedThread.write(message, 0);
 
         return view;
     }

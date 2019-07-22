@@ -112,7 +112,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                mConnectedThread.cancel();
+                //mConnectedThread.cancel();
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isBluetooth", true);
                 bundle.putBoolean("isClient", true);
@@ -134,6 +134,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                     mAcceptThread = new AcceptThread();
                     mAcceptThread.run();
                     nQuestions = 3;
+                    questionViewModel.setNUM_TOTAL_QUESTIONS(nQuestions);
 //                    String sendMessage = "sent!";
 //                    byte[] send = sendMessage.getBytes();
                     //ByteBuffer bb = ByteBuffer.allocate(4);
@@ -182,7 +183,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                     }
                     mConnectedThread.write(message, 0);
                     questionViewModel.setQuestionsSent(true);
-                    mConnectedThread.cancel();
+                    //mConnectedThread.cancel();
 //                    mConnectedThread.write(send, -1, 0);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isBluetooth", true);

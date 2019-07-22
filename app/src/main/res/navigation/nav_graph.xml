@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_questionFragment_to_endQuizFragment"
             app:destination="@id/endQuizFragment" />
+        <action
+            android:id="@+id/action_questionFragment_to_endMultiplayerQuizFragment"
+            app:destination="@+id/endMultiplayerQuizFragment" />
     </fragment>
     <fragment
         android:id="@+id/statsFragment"
@@ -50,11 +53,8 @@
             app:destination="@+id/launchQuizFragment" />
         <argument
             android:name="score"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <action
-            android:id="@+id/action_questionFragment_to_endMultiplayerQuizFragment"
-            app:destination="@+id/endMultiplayerQuizFragment" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/launchMultiplayerFragment"
@@ -64,5 +64,14 @@
         <action
             android:id="@+id/action_launchMultiplayerFragment_to_questionFragment"
             app:destination="@id/questionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/endMultiplayerQuizFragment"
+        android:name="com.flamingo.wikiquiz.EndMultiplayerQuizFragment"
+        android:label="fragment_end_multiplayer_quiz"
+        tools:layout="@layout/fragment_end_multiplayer_quiz">
+        <action
+            android:id="@+id/action_endMultiplayerFragment_to_launchQuizFragment"
+            app:destination="@id/launchQuizFragment" />
     </fragment>
 </navigation>
