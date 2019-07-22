@@ -134,7 +134,7 @@ public class LaunchMultiplayerFragment extends Fragment {
 //                    byte[] send = sendMessage.getBytes();
                     //ByteBuffer bb = ByteBuffer.allocate(4);
                     //bb.putInt(nQuestions);
-                    int size = nQuestions * 8 + 4;
+                    int size = nQuestions * 24 + 4;
                     int index = 0;
                     byte[] message = new byte[size];
                     byte[] nQuestionByte = ByteBuffer.allocate(4).putInt(nQuestions).array();
@@ -163,10 +163,15 @@ public class LaunchMultiplayerFragment extends Fragment {
                                 index++;
                             }
                         }
-//                        for (byte b : questionContentArray.get(1).get(0)) {
-//                            message[index] = b;
-//                            index++;
-//                        }
+                        for (Infobox infobox : questionContent.infoboxes) {
+                            int id = infobox.getRowId();
+                            ByteBuffer bb = ByteBuffer.allocate(4);
+                            bb.putInt(id);
+                            for (byte b : bb.array()) {
+                                message[index] = b;
+                                index++;
+                            }
+                        }
                         for (byte b : questionContentArray.get(3).get(0)) {
                             message[index] = b;
                             index++;
@@ -261,6 +266,7 @@ public class LaunchMultiplayerFragment extends Fragment {
                     }
                     nQuestions = ByteBuffer.wrap(integer).getInt();
                     int qcParamIndex = 0;
+                    int nAnswers = 0;
                     tempQC = new QuestionContent();
                     for (int i = index; i < msg.arg1; i++) {
                         integer[i%4] = readBuf[index];
@@ -270,6 +276,22 @@ public class LaunchMultiplayerFragment extends Fragment {
                                 tempQC.setQuestionString(ByteBuffer.wrap(integer).getInt());
                                 qcParamIndex = 1;
                             }
+                            else if (qcParamIndex == 1) {
+                                Infobox infobox = questionViewModel.getInfoboxById(
+                                        ByteBuffer.wrap(integer).getInt());
+                                tempQC.infoboxes.add(infobox);
+                                if (tempQC.questionString.equals("What is this person's name?")) {
+                                    tempQC.answers.add(infobox.getName());
+                                }
+                                else {
+                                    tempQC.answers.add(Integer.toString(infobox.getBirthYear()));
+                                }
+                                nAnswers++;
+                                if (nAnswers >= 4) {
+                                    nAnswers = 0;
+                                    qcParamIndex = 2;
+                                }
+                            }
                             else {
                                 tempQC.setCorrectAnswer(ByteBuffer.wrap(integer).getInt());
                                 readQC.add(tempQC);
@@ -277,6 +299,8 @@ public class LaunchMultiplayerFragment extends Fragment {
                             }
                         }
                     }
+                    questionViewModel.setQuestionsSent(true);
+                    break;
 //                    switch (readCount) {
 //                        case 0:
 ////                            qc = questionViewModel.getPreloadedAtIndex(msg.arg2);
@@ -317,7 +341,6 @@ public class LaunchMultiplayerFragment extends Fragment {
 
 //                    Toast.makeText(getActivity(), "Received Message: " + readMessage,
 //                            Toast.LENGTH_SHORT).show();
-                    break;
                 case MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer

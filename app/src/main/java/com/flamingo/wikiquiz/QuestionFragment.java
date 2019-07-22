@@ -142,6 +142,9 @@ public class QuestionFragment extends Fragment {
         infoboxesList = questionViewModel.getAllInfoBoxes();
 
         if (IS_CLIENT) {
+            while (!questionViewModel.getQuestionsSent()) {
+                // Stay in this loop until server has sent all the question content
+            }
             //ArrayList<QuestionContent> hostQCs = new ArrayList<QuestionContent>();
 //            App app = (App)getActivity().getApplication();
 //            ConnectedThread mConnectedThread = new ConnectedThread(app.getBTSocket());
